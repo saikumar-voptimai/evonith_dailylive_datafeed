@@ -1,0 +1,6 @@
+INFLUXDB:
+  HOST: https://eu-central-1-1.aws.cloud2.influxdata.com
+  ORG: Blast Furnace, Evonith
+  BUCKET: bf2_evonith_raw
+timezone: UTC
+WAIT: 10 # seconds of waiting time between each request for live

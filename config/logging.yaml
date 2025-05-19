@@ -1,0 +1,25 @@
+version: 1
+formatters:
+  simple:
+    format: '[%(levelname)s   | %(module)s           | L%(lineno)d] %(asctime)s: %(message)s | %(filename)s'
+    datefmt: '%Y-%m-%dT%H:%M:%S%z'
+handlers:
+  console:
+    class: logging.StreamHandler
+    formatter: simple
+    level: DEBUG
+  file:
+    class: logging.handlers.RotatingFileHandler
+    formatter: simple
+    filename: logs/pipeline.log
+    level: DEBUG
+    maxBytes: 10000
+    backupCount: 3
+loggers:
+  pipeline:
+    level: DEBUG
+    handlers: [console, file]
+    propagate: no
+root:
+  level: DEBUG
+  handlers: [console, file]
