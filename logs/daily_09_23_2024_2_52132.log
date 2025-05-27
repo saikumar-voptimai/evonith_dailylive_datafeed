@@ -1,0 +1,17 @@
+[INFO   | api_client           | L41] 2025-05-25T15:20:52+0530: fetch_api_data(date=09-23-2024, range_param=2) | api_client.py
+[INFO   | api_client           | L55] 2025-05-25T15:20:52+0530: API response status code: 200 | api_client.py
+[INFO   | api_client           | L113] 2025-05-25T15:20:52+0530: Fetched raw data for 09-23-2024 in 0.564877 seconds | api_client.py
+[INFO   | data_cleaner           | L15] 2025-05-25T15:20:52+0530: Starting clean_and_parse_data | data_cleaner.py
+[ERROR   | api_client           | L125] 2025-05-25T15:20:52+0530: process_and_write failed | api_client.py
+Traceback (most recent call last):
+  File "E:\Personal\MarketResearch\EvonithSteel\BlastFurnaceProject\PythonBlastFurnace\dailydatafeed\src\pipeline\api_client.py", line 117, in process_datewise
+    cleaned_list = clean_and_parse_data(raw)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\Personal\MarketResearch\EvonithSteel\BlastFurnaceProject\PythonBlastFurnace\dailydatafeed\src\pipeline\data_cleaner.py", line 16, in clean_and_parse_data
+    cleaned = re.sub(r'<script.*?</script>', '', raw_data, flags=re.DOTALL).strip()
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\sairi\AppData\Local\Programs\Python\Python312\Lib\re\__init__.py", line 186, in sub
+    return _compile(pattern, flags).sub(repl, string, count)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+TypeError: expected string or bytes-like object, got 'NoneType'
+[INFO   | run_tracker           | L56] 2025-05-25T15:20:52+0530: Resolved absolute DB path: E:\Personal\MarketResearch\EvonithSteel\BlastFurnaceProject\PythonBlastFurnace\dailydatafeed\db\run_metadata.db | run_tracker.py

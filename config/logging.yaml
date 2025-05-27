@@ -7,19 +7,19 @@ handlers:
   console:
     class: logging.StreamHandler
     formatter: simple
-    level: DEBUG
+    level: INFO
   file:
     class: logging.handlers.RotatingFileHandler
     formatter: simple
     filename: logs/pipeline.log
-    level: DEBUG
+    level: INFO
     maxBytes: 10000
-    backupCount: 3
+    backupCount: 1
 loggers:
   pipeline:
-    level: DEBUG
+    level: INFO
     handlers: [console, file]
     propagate: no
 root:
-  level: DEBUG
+  level: INFO
   handlers: [console, file]

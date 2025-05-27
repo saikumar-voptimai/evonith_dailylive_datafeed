@@ -1,0 +1,75 @@
+import sqlite3
+import json
+import os
+import logging
+
+logger = logging.getLogger('pipeline')
+
+def init_db(db_path='db/run_metadata.db'):
+    """
+    Initialize the local SQLite DB and create runs table if not exists.
+    """
+    os.makedirs(os.path.dirname(db_path), exist_ok=True)
+    logger.info(f"Resolved absolute DB path: {os.path.abspath(db_path)}")
+    conn = sqlite3.connect(db_path)
+    cur = conn.cursor()
+    cur.execute('''
+        CREATE TABLE IF NOT EXISTS runs (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            run_time TEXT,
+            date_run TEXT,
+            range TEXT,
+            mode TEXT,
+            parameters TEXT,
+            process_id INTEGER,
+            success INTEGER,
+            num_records INTEGER,
+            log_path TEXT,
+            points_file_path TEXT,
+            UNIQUE(date_run, range, mode) ON CONFLICT REPLACE
+        )
+    ''')
+    conn.commit()
+    cur.execute("SELECT name FROM sqlite_master WHERE type='table';")
+    logger.info(f"Tables in DB: {cur.fetchall()}")
+    conn.close()
+    logger.info(f"Initialized database at {db_path} with runs table.")
+
+
+def log_run(run_time: str, date_run: str, range_param: str, mode: str, parameters: dict, process_id: int, success: int, num_records: int, log_path: str, points_file_path: str, db_path: str = 'db/run_metadata.db') -> None:
+    """
+    Log a pipeline run to the SQLite DB. Perform an upsert based on date_run, range, and mode.
+    Args:
+        run_time: Timestamp of the run
+        date_run: Date string for the run
+        range_param: Range parameter
+        mode: 'daily' or 'live'
+        parameters: Parameters used for the run
+        process_id: PID
+        success: Whether the run succeeded
+        num_records: Number of records processed
+        log_path: Path to the log file
+        points_file_path: Path to the points file
+        mode: 'daily' or 'live'
+        db_path: Path to the SQLite DB
+    """
+    logger.info(f"Resolved absolute DB path: {os.path.abspath(db_path)}")
+    conn = sqlite3.connect(db_path)
+    cur = conn.cursor()
+    cur.execute(
+        '''
+        INSERT INTO runs (run_time, date_run, range, mode, parameters, process_id, success, num_records, log_path, points_file_path)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+        ON CONFLICT(date_run, range, mode) DO UPDATE SET
+            run_time=excluded.run_time,
+            parameters=excluded.parameters,
+            process_id=excluded.process_id,
+            success=excluded.success,
+            num_records=excluded.num_records,
+            log_path=excluded.log_path,
+            points_file_path=excluded.points_file_path
+        ''',
+        (run_time, date_run, range_param, mode, json.dumps(parameters), process_id, int(success), num_records, log_path, points_file_path)
+    )
+    conn.commit()
+    conn.close()

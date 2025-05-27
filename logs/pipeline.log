@@ -1,48 +1,69 @@
-[INFO   | bf2_rename_map           | L90] 2025-05-19T03:03:21+0100: Wrote 230 float points, 1 string points, and 110                 temperature points. Total points: 341 | bf2_rename_map.py
-[INFO   | bf2_rename_map           | L53] 2025-05-19T03:03:21+0100: Building points for timestamp: 2025-05-05 15:35:28+00:00 | bf2_rename_map.py
-[INFO   | bf2_rename_map           | L54] 2025-05-19T03:03:21+0100: Total 377 variables observed. | bf2_rename_map.py
-[INFO   | bf2_rename_map           | L90] 2025-05-19T03:03:21+0100: Wrote 230 float points, 1 string points, and 110                 temperature points. Total points: 341 | bf2_rename_map.py
-[INFO   | bf2_rename_map           | L53] 2025-05-19T03:03:21+0100: Building points for timestamp: 2025-05-05 15:35:38+00:00 | bf2_rename_map.py
-[INFO   | bf2_rename_map           | L54] 2025-05-19T03:03:21+0100: Total 377 variables observed. | bf2_rename_map.py
-[INFO   | bf2_rename_map           | L90] 2025-05-19T03:03:21+0100: Wrote 230 float points, 1 string points, and 110                 temperature points. Total points: 341 | bf2_rename_map.py
-[INFO   | bf2_rename_map           | L53] 2025-05-19T03:03:21+0100: Building points for timestamp: 2025-05-05 15:35:08+00:00 | bf2_rename_map.py
-[INFO   | bf2_rename_map           | L54] 2025-05-19T03:03:21+0100: Total 377 variables observed. | bf2_rename_map.py
-[INFO   | bf2_rename_map           | L90] 2025-05-19T03:03:21+0100: Wrote 230 float points, 1 string points, and 110                 temperature points. Total points: 341 | bf2_rename_map.py
-[INFO   | bf2_rename_map           | L53] 2025-05-19T03:03:21+0100: Building points for timestamp: 2025-05-05 15:35:18+00:00 | bf2_rename_map.py
-[INFO   | bf2_rename_map           | L54] 2025-05-19T03:03:21+0100: Total 377 variables observed. | bf2_rename_map.py
-[INFO   | bf2_rename_map           | L90] 2025-05-19T03:03:21+0100: Wrote 230 float points, 1 string points, and 110                 temperature points. Total points: 341 | bf2_rename_map.py
-[INFO   | bf2_rename_map           | L53] 2025-05-19T03:03:21+0100: Building points for timestamp: 2025-05-05 15:34:48+00:00 | bf2_rename_map.py
-[INFO   | bf2_rename_map           | L54] 2025-05-19T03:03:21+0100: Total 377 variables observed. | bf2_rename_map.py
-[INFO   | bf2_rename_map           | L90] 2025-05-19T03:03:21+0100: Wrote 230 float points, 1 string points, and 110                 temperature points. Total points: 341 | bf2_rename_map.py
-[INFO   | bf2_rename_map           | L53] 2025-05-19T03:03:21+0100: Building points for timestamp: 2025-05-05 15:34:58+00:00 | bf2_rename_map.py
-[INFO   | bf2_rename_map           | L54] 2025-05-19T03:03:21+0100: Total 377 variables observed. | bf2_rename_map.py
-[INFO   | bf2_rename_map           | L90] 2025-05-19T03:03:21+0100: Wrote 230 float points, 1 string points, and 110                 temperature points. Total points: 341 | bf2_rename_map.py
-[INFO   | bf2_rename_map           | L53] 2025-05-19T03:03:21+0100: Building points for timestamp: 2025-05-05 15:34:28+00:00 | bf2_rename_map.py
-[INFO   | bf2_rename_map           | L54] 2025-05-19T03:03:21+0100: Total 377 variables observed. | bf2_rename_map.py
-[INFO   | bf2_rename_map           | L90] 2025-05-19T03:03:21+0100: Wrote 230 float points, 1 string points, and 110                 temperature points. Total points: 341 | bf2_rename_map.py
-[INFO   | bf2_rename_map           | L53] 2025-05-19T03:03:21+0100: Building points for timestamp: 2025-05-05 15:34:38+00:00 | bf2_rename_map.py
-[INFO   | bf2_rename_map           | L54] 2025-05-19T03:03:21+0100: Total 377 variables observed. | bf2_rename_map.py
-[INFO   | bf2_rename_map           | L90] 2025-05-19T03:03:21+0100: Wrote 230 float points, 1 string points, and 110                 temperature points. Total points: 341 | bf2_rename_map.py
-[INFO   | bf2_rename_map           | L53] 2025-05-19T03:03:21+0100: Building points for timestamp: 2025-05-05 15:34:08+00:00 | bf2_rename_map.py
-[INFO   | bf2_rename_map           | L54] 2025-05-19T03:03:21+0100: Total 377 variables observed. | bf2_rename_map.py
-[INFO   | bf2_rename_map           | L90] 2025-05-19T03:03:21+0100: Wrote 230 float points, 1 string points, and 110                 temperature points. Total points: 341 | bf2_rename_map.py
-[INFO   | bf2_rename_map           | L53] 2025-05-19T03:03:21+0100: Building points for timestamp: 2025-05-05 15:34:18+00:00 | bf2_rename_map.py
-[INFO   | bf2_rename_map           | L54] 2025-05-19T03:03:21+0100: Total 377 variables observed. | bf2_rename_map.py
-[INFO   | bf2_rename_map           | L90] 2025-05-19T03:03:21+0100: Wrote 230 float points, 1 string points, and 110                 temperature points. Total points: 341 | bf2_rename_map.py
-[INFO   | bf2_rename_map           | L53] 2025-05-19T03:03:21+0100: Building points for timestamp: 2025-05-05 15:33:58+00:00 | bf2_rename_map.py
-[INFO   | bf2_rename_map           | L54] 2025-05-19T03:03:21+0100: Total 377 variables observed. | bf2_rename_map.py
-[INFO   | bf2_rename_map           | L90] 2025-05-19T03:03:21+0100: Wrote 229 float points, 2 string points, and 110                 temperature points. Total points: 341 | bf2_rename_map.py
-[INFO   | write_to_file           | L52] 2025-05-19T03:03:29+0100: Wrote line protocol points to output\05-05-2025.txt | write_to_file.py
-[INFO   | main           | L99] 2025-05-19T03:03:29+0100: Waiting 120s | main.py
-[INFO   | main           | L96] 2025-05-19T03:07:05+0100: Processing date 10-01-2024 | main.py
-[INFO   | api_client           | L45] 2025-05-19T03:08:01+0100: API response status code: 200 | api_client.py
-[INFO   | bf2_rename_map           | L53] 2025-05-19T03:08:43+0100: Building points for timestamp: 2024-10-01 23:59:54+00:00 | bf2_rename_map.py
-[INFO   | bf2_rename_map           | L54] 2025-05-19T03:08:43+0100: Total 377 variables observed. | bf2_rename_map.py
-[INFO   | bf2_rename_map           | L90] 2025-05-19T03:08:43+0100: Wrote 231 float points, 0 string points, and 110                 temperature points. Total points: 341 | bf2_rename_map.py
-[INFO   | influx_writer           | L20] 2025-05-19T03:08:43+0100: Writing to InfluxDB using influxdb_client_3 | influx_writer.py
-[ERROR   | influx_writer           | L37] 2025-05-19T03:08:43+0100: Error writing to InfluxDB: (400)
-Reason: Bad Request
-HTTP response headers: HTTPHeaderDict({'Date': 'Mon, 19 May 2025 02:08:43 GMT', 'Content-Type': 'application/json', 'Content-Length': '278', 'Connection': 'keep-alive', 'influxdata-partial-write': 'true', 'trace-id': '7303ee2c23117441', 'trace-sampled': 'false', 'Strict-Transport-Security': 'max-age=31536000; includeSubDomains', 'X-Influxdb-Request-ID': 'b5392d067d3a94c3d9a575c2fd2d8d31', 'X-Influxdb-Build': 'Cloud'})
-HTTP response body: {"code":"invalid","message":"partial write has occurred, errors encountered on line(s): line 14: table schema conflict - line has column 'hot_blast_temp_spare' of type iox::column_type::field::float but table 'process_params' has type iox::column_type::field::string","line":14}
- | influx_writer.py
-[ERROR   | main           | L93] 2025-05-19T12:58:42+0100: Daily mode requires --date or --startdate/--enddate | main.py
+[INFO   | main           | L58] 2025-05-25T05:17:31+0530: Start date None is the same as end date None. Triggering daily mode. | main.py
+[INFO   | main           | L58] 2025-05-25T05:21:22+0530: Start date None is the same as end date None. Triggering daily mode. | main.py
+[INFO   | main           | L58] 2025-05-25T05:23:47+0530: Start date None is the same as end date None. Triggering daily mode. | main.py
+[INFO   | main           | L58] 2025-05-25T05:24:39+0530: Start date None is the same as end date None. Triggering daily mode. | main.py
+[INFO   | main           | L58] 2025-05-25T05:29:17+0530: Start date None is the same as end date None. Triggering daily mode. | main.py
+[INFO   | main           | L58] 2025-05-25T05:34:01+0530: Start date None is the same as end date None. Triggering daily mode. | main.py
+[INFO   | main           | L59] 2025-05-25T05:35:28+0530: Start date None is the same as end date None. Triggering daily mode. | main.py
+[INFO   | main           | L59] 2025-05-25T05:46:31+0530: Start date None is the same as end date None. Triggering daily mode. | main.py
+[INFO   | main           | L59] 2025-05-25T05:53:28+0530: Start date None is the same as end date None. Triggering daily mode. | main.py
+[INFO   | main           | L59] 2025-05-25T05:55:52+0530: Start date None is the same as end date None. Triggering daily mode. | main.py
+[DEBUG   | main           | L91] 2025-05-25T06:31:18+0530: Range mode - Processing date range: 2024-09-01 00:00:00 to 2025-05-05 00:00:00 | main.py
+[DEBUG   | main           | L97] 2025-05-25T06:31:31+0530: Processing date 2024-09-01 00:00:00 | main.py
+[DEBUG   | main           | L91] 2025-05-25T06:42:14+0530: Range mode - Processing date range: 2024-09-01 00:00:00 to 2025-05-05 00:00:00 | main.py
+[DEBUG   | main           | L97] 2025-05-25T06:42:19+0530: Processing date 2024-09-01 00:00:00 | main.py
+[DEBUG   | main           | L91] 2025-05-25T06:47:12+0530: Range mode - Processing date range: 2024-09-01 00:00:00 to 2025-05-05 00:00:00 | main.py
+[DEBUG   | main           | L97] 2025-05-25T06:47:12+0530: Processing date 2024-09-01 00:00:00 | main.py
+[DEBUG   | main           | L91] 2025-05-25T06:51:59+0530: Range mode - Processing date range: 2024-09-01 00:00:00 to 2025-05-05 00:00:00 | main.py
+[DEBUG   | main           | L97] 2025-05-25T06:51:59+0530: Processing date 2024-09-01 00:00:00 | main.py
+[DEBUG   | main           | L91] 2025-05-25T07:10:13+0530: Range mode - Processing date range: 2024-09-01 00:00:00 to 2025-05-05 00:00:00 | main.py
+[DEBUG   | main           | L97] 2025-05-25T07:10:13+0530: Processing date 2024-09-01 00:00:00 | main.py
+[DEBUG   | main           | L91] 2025-05-25T07:30:23+0530: Range mode - Processing date range: 2024-09-01 00:00:00 to 2025-05-05 00:00:00 | main.py
+[DEBUG   | main           | L97] 2025-05-25T07:30:23+0530: Processing date 2024-09-01 00:00:00 | main.py
+[DEBUG   | main           | L91] 2025-05-25T07:30:40+0530: Range mode - Processing date range: 2024-09-01 00:00:00 to 2025-05-05 00:00:00 | main.py
+[DEBUG   | main           | L97] 2025-05-25T07:30:40+0530: Processing date 2024-09-01 00:00:00 | main.py
+[DEBUG   | main           | L91] 2025-05-25T07:32:50+0530: Range mode - Processing date range: 2024-09-01 00:00:00 to 2025-05-05 00:00:00 | main.py
+[DEBUG   | main           | L97] 2025-05-25T07:32:50+0530: Processing date 2024-09-01 00:00:00 | main.py
+[DEBUG   | main           | L91] 2025-05-25T07:44:19+0530: Range mode - Processing date range: 2024-09-01 00:00:00 to 2025-05-05 00:00:00 | main.py
+[DEBUG   | main           | L97] 2025-05-25T07:44:19+0530: Processing date 2024-09-01 00:00:00 | main.py
+[DEBUG   | main           | L91] 2025-05-25T07:48:34+0530: Range mode - Processing date range: 2024-09-01 00:00:00 to 2025-05-15 00:00:00 | main.py
+[DEBUG   | main           | L97] 2025-05-25T07:48:34+0530: Processing date 2024-09-01 00:00:00 | main.py
+[DEBUG   | main           | L91] 2025-05-25T07:53:15+0530: Range mode - Processing date range: 2024-09-01 00:00:00 to 2025-05-15 00:00:00 | main.py
+[DEBUG   | main           | L97] 2025-05-25T07:53:15+0530: Processing date 2024-09-01 00:00:00 | main.py
+[DEBUG   | main           | L91] 2025-05-25T07:58:32+0530: Range mode - Processing date range: 2024-09-01 00:00:00 to 2025-05-05 00:00:00 | main.py
+[DEBUG   | main           | L97] 2025-05-25T07:58:32+0530: Processing date 2024-09-01 00:00:00 | main.py
+[DEBUG   | main           | L91] 2025-05-25T08:04:52+0530: Range mode - Processing date range: 2024-09-01 00:00:00 to 2025-05-05 00:00:00 | main.py
+[DEBUG   | main           | L97] 2025-05-25T08:04:52+0530: Processing date 2024-09-01 00:00:00 | main.py
+[DEBUG   | main           | L91] 2025-05-25T08:07:18+0530: Range mode - Processing date range: 2024-09-01 00:00:00 to 2025-05-05 00:00:00 | main.py
+[DEBUG   | main           | L97] 2025-05-25T08:07:18+0530: Processing date 2024-09-01 00:00:00 | main.py
+[DEBUG   | main           | L91] 2025-05-25T18:41:20+0530: Range mode - Processing date range: 2024-04-01 00:00:00 to 2025-05-25 00:00:00 | main.py
+[DEBUG   | main           | L97] 2025-05-25T18:41:20+0530: Processing date 2024-04-01 00:00:00 | main.py
+[DEBUG   | main           | L91] 2025-05-25T18:48:50+0530: Range mode - Processing date range: 2024-04-01 00:00:00 to 2025-05-25 00:00:00 | main.py
+[DEBUG   | main           | L97] 2025-05-25T18:48:50+0530: Processing date 2024-04-01 00:00:00 | main.py
+[DEBUG   | main           | L91] 2025-05-25T18:54:55+0530: Range mode - Processing date range: 2024-04-01 00:00:00 to 2025-05-25 00:00:00 | main.py
+[DEBUG   | main           | L97] 2025-05-25T18:54:55+0530: Processing date 2024-04-01 00:00:00 | main.py
+[DEBUG   | main           | L91] 2025-05-25T19:06:17+0530: Range mode - Processing date range: 2025-04-01 00:00:00 to 2025-05-25 00:00:00 | main.py
+[DEBUG   | main           | L97] 2025-05-25T19:06:17+0530: Processing date 2025-04-01 00:00:00 | main.py
+[DEBUG   | main           | L91] 2025-05-25T19:09:00+0530: Range mode - Processing date range: 2025-04-01 00:00:00 to 2025-05-25 00:00:00 | main.py
+[DEBUG   | main           | L97] 2025-05-25T19:09:00+0530: Processing date 2025-04-01 00:00:00 | main.py
+[DEBUG   | main           | L91] 2025-05-25T19:10:48+0530: Range mode - Processing date range: 2025-04-01 00:00:00 to 2025-05-25 00:00:00 | main.py
+[DEBUG   | main           | L97] 2025-05-25T19:10:48+0530: Processing date 2025-04-01 00:00:00 | main.py
+[DEBUG   | main           | L91] 2025-05-25T19:12:42+0530: Range mode - Processing date range: 2025-04-01 00:00:00 to 2025-05-25 00:00:00 | main.py
+[DEBUG   | main           | L97] 2025-05-25T19:12:42+0530: Processing date 2025-04-01 00:00:00 | main.py
+[DEBUG   | main           | L91] 2025-05-25T19:16:22+0530: Range mode - Processing date range: 2025-04-20 00:00:00 to 2025-05-25 00:00:00 | main.py
+[DEBUG   | main           | L97] 2025-05-25T19:16:22+0530: Processing date 2025-04-20 00:00:00 | main.py
+[DEBUG   | main           | L91] 2025-05-25T21:56:39+0530: Range mode - Processing date range: 2025-01-01 00:00:00 to 2025-04-19 00:00:00 | main.py
+[DEBUG   | main           | L97] 2025-05-25T21:56:39+0530: Processing date 2025-01-01 00:00:00 | main.py
+[DEBUG   | main           | L91] 2025-05-26T09:13:36+0530: Range mode - Processing date range: 2025-05-25 00:00:00 to 2025-05-26 00:00:00 | main.py
+[DEBUG   | main           | L97] 2025-05-26T09:13:36+0530: Processing date 2025-05-25 00:00:00 | main.py
+[INFO   | main           | L59] 2025-05-26T18:37:54+0530: Start date None is the same as end date None. Triggering daily mode. | main.py
+[DEBUG   | main           | L102] 2025-05-26T18:37:54+0530: Daily mode - Processing date: None | main.py
+[ERROR   | main           | L109] 2025-05-26T18:37:54+0530: Date is required in daily mode | main.py
+[INFO   | main           | L59] 2025-05-26T18:39:28+0530: Start date None is the same as end date None. Triggering daily mode. | main.py
+[DEBUG   | main           | L102] 2025-05-26T18:39:28+0530: Daily mode - Processing date: None | main.py
+[DEBUG   | main           | L102] 2025-05-26T18:43:03+0530: Daily mode - Processing date: 05-26-2025 | main.py
+[DEBUG   | main           | L102] 2025-05-26T18:47:02+0530: Daily mode - Processing date: 05-26-2025 | main.py
+[DEBUG   | main           | L102] 2025-05-27T13:22:52+0530: Daily mode - Processing date: 05-27-2025 | main.py
+[DEBUG   | main           | L110] 2025-05-27T23:56:22+0530: Daily mode - Processing date: 05-27-2025 | main.py
+[DEBUG   | main           | L109] 2025-05-27T23:57:36+0530: Daily mode - Processing date: 05-27-2025 | main.py
+[DEBUG   | main           | L110] 2025-05-27T23:58:31+0530: Daily mode - Processing date: 05-27-2025 | main.py

@@ -4,3 +4,13 @@ INFLUXDB:
   BUCKET: bf2_evonith_raw
 timezone: UTC
 WAIT: 10 # seconds of waiting time between each request for live
+WRITE_DELAY: 15
+API_DAILY_TIMEOUT: 120 # seconds of timeout for daily
+API_LIVE_TIMEOUT: 30 # seconds of timeout for live
+
+DATE_FORMAT: '%m-%d-%Y'
+TIME_FORMAT: '%H:%M:%S'
+DATE_FORMAT_FILENAME: '%m_%d_%Y'
+TIME_FORMAT_FILENAME: '%H_%M_%S'
+
+DATETIME_FORMAT: '%Y-%m-%dT%H:%M:%S%z' # ISO 8601 format

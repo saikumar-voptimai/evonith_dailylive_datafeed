@@ -1,0 +1,17 @@
+[INFO   | api_client           | L41] 2025-05-26T03:25:25+0530: fetch_api_data(date=04-03-2025, range_param=1) | api_client.py
+[INFO   | api_client           | L55] 2025-05-26T03:25:26+0530: API response status code: 200 | api_client.py
+[ERROR   | api_client           | L62] 2025-05-26T03:25:26+0530: API fetch failed (attempt 1): API response is empty | api_client.py
+[INFO   | api_client           | L55] 2025-05-26T03:25:37+0530: API response status code: 200 | api_client.py
+[ERROR   | api_client           | L62] 2025-05-26T03:25:37+0530: API fetch failed (attempt 2): API response is empty | api_client.py
+[INFO   | api_client           | L55] 2025-05-26T03:25:47+0530: API response status code: 200 | api_client.py
+[ERROR   | api_client           | L62] 2025-05-26T03:25:47+0530: API fetch failed (attempt 3): API response is empty | api_client.py
+[ERROR   | api_client           | L129] 2025-05-26T03:25:47+0530: fetch_api_data failed for 04-03-2025 | api_client.py
+Traceback (most recent call last):
+  File "E:\Personal\MarketResearch\EvonithSteel\BlastFurnaceProject\PythonBlastFurnace\dailydatafeed\src\pipeline\api_client.py", line 114, in process_datewise
+    raw = fetch_api_data(dt_str, range_param)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\Personal\MarketResearch\EvonithSteel\BlastFurnaceProject\PythonBlastFurnace\dailydatafeed\src\pipeline\api_client.py", line 58, in fetch_api_data
+    assert root.text is not None, "API response is empty"
+           ^^^^^^^^^^^^^^^^^^^^^
+AssertionError: API response is empty
+[INFO   | run_tracker           | L56] 2025-05-26T03:25:47+0530: Resolved absolute DB path: E:\Personal\MarketResearch\EvonithSteel\BlastFurnaceProject\PythonBlastFurnace\dailydatafeed\db\run_metadata.db | run_tracker.py
