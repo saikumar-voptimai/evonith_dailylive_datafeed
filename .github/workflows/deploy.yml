@@ -1,0 +1,82 @@
+# .github/workflows/deploy.yml
+name: CI/CD Deploy to Raspberry Pi
+
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  test-build-deploy:
+    runs-on: ubuntu-latest
+    env:
+      PI_HOST: ${{ secrets.PI_HOST }}
+      PI_USER: ${{ secrets.PI_USER }}
+      PI_SSH_KEY: ${{ secrets.PI_SSH_KEY }}
+      PROJECT_DIR: /opt/blastfurnace
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install uv
+        run: pip install uv
+
+      - name: Install dependencies
+        run: uv pip install -r requirements.txt
+
+      - name: Run unittests
+        run: |
+          mkdir -p test_logs
+          python -m unittest discover -s test
+
+      - name: Get version
+        id: version
+        run: |
+          PATCH=$(git rev-list --count HEAD)
+          YY=$(date +"%y")
+          WEEK=$(date +"%V")
+          VERSION="$YY.$WEEK.$PATCH"
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
+
+      - name: Bundle project with uv
+        run: |
+          uv pip compile --all-extras --output-file uv.lock
+
+      - name: Archive project
+        run: |
+          mkdir -p dist
+          tar czf dist/blastfurnace-${{ steps.version.outputs.version }}.tar.gz . --exclude=dist --exclude=.git --exclude=test_logs
+
+      - name: Copy to Raspberry Pi
+        uses: appleboy/scp-action@v0.1.7
+        with:
+          host: ${{ env.PI_HOST }}
+          username: ${{ env.PI_USER }}
+          key: ${{ env.PI_SSH_KEY }}
+          source: "dist/blastfurnace-${{ steps.version.outputs.version }}.tar.gz"
+          target: "${{ env.PROJECT_DIR }}/releases/"
+
+      - name: Deploy and update symlink
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ env.PI_HOST }}
+          username: ${{ env.PI_USER }}
+          key: ${{ env.PI_SSH_KEY }}
+          script: |
+            set -e
+            cd $PROJECT_DIR/releases
+            tar xzf blastfurnace-${{ steps.version.outputs.version }}.tar.gz -C $PROJECT_DIR/releases
+            rm -f $PROJECT_DIR/current
+            ln -sfn $PROJECT_DIR/releases/blastfurnace-${{ steps.version.outputs.version }} $PROJECT_DIR/current
+            echo "Symlink updated to blastfurnace-${{ steps.version.outputs.version }}"
+            # Keep last 3 releases for rollback
+            ls -dt $PROJECT_DIR/releases/blastfurnace-* | tail -n +4 | xargs rm -rf || true
+
+      - name: Rollback instructions
+        run: |
+          echo "To rollback, SSH into the Pi and repoint the symlink:"
+          echo "ln -sfn /opt/blastfurnace/releases/blastfurnace-<old_version> /opt/blastfurnace/current"
