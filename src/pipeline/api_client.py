@@ -6,9 +6,9 @@ import requests
 import logging
 from datetime import datetime
 from dotenv import load_dotenv
-from pipeline.data_cleaner import clean_and_parse_data
-from pipeline.influx_writer import process_and_write
-from pipeline.run_tracker import log_run
+from src.pipeline.data_cleaner import clean_and_parse_data
+from src.pipeline.influx_writer import process_and_write
+from src.pipeline.run_tracker import log_run
 from time import sleep
 from xml.etree import ElementTree
 import yaml
@@ -29,14 +29,16 @@ API_URL_DAILY = os.getenv("API_URL_DAILY")
 
 def fetch_api_data(date_str, range_param, max_retries=3, delay=10):
     """
-    Fetch data from the API for a given date and range. Retries on failure.
+    Fetches raw XML data from the daily API for a given date and range, with retry logic.
     Args:
-        date_str (str): Date in MM-DD-YYYY format
-        range_param (int): Range parameter for API
-        max_retries (int): Number of retries
-        delay (int): Delay between retries (seconds)
+        date_str (str): Date in MM-DD-YYYY format.
+        range_param (int): Range parameter for API (e.g., 1 or 2).
+        max_retries (int): Maximum number of retry attempts on failure.
+        delay (int): Delay in seconds between retries.
     Returns:
-        str: Raw XML response as string
+        str: Raw XML response as a string if successful.
+    Raises:
+        Exception: If all retries fail or response is empty/invalid.
     """
     logger.info(f"fetch_api_data(date={date_str}, range_param={range_param})")
     month, day, year = [int(x) for x in date_str.split('-')]
@@ -67,12 +69,14 @@ def fetch_api_data(date_str, range_param, max_retries=3, delay=10):
 
 def fetch_api_data_live(max_retries=3, delay=5):
     """
-    Fetch data from the LIVE API for CURRENT data. Retries on failure.
+    Fetches raw XML data from the live API for current data, with retry logic.
     Args:
-        max_retries (int): Number of retries
-        delay (int): Delay between retries (seconds)
+        max_retries (int): Maximum number of retry attempts on failure.
+        delay (int): Delay in seconds between retries.
     Returns:
-        str: Raw XML response as string
+        str: Raw XML response as a string if successful.
+    Raises:
+        Exception: If all retries fail or response is empty/invalid.
     """
     logger.info("fetch_api_data_live() called")
     params = {
@@ -98,12 +102,15 @@ def fetch_api_data_live(max_retries=3, delay=5):
 
 def process_datewise(dt: datetime.date, range_param: int, log_run_to_localdb: bool, args=None, log_path: str = None):
     """
-    Process data for a specific date and range.
+    Orchestrates fetching, cleaning, processing, and writing of data for a specific date and range.
     Args:
-        dt (datetime.date): Date to process
-        range_param (int): Range parameter for API
-        log_run_to_localdb (bool): Flag to log run to local DB
-        args: CLI args
+        dt (datetime.date): Date to process.
+        range_param (int): Range parameter for API (e.g., 1 or 2).
+        log_run_to_localdb (bool): Whether to log the run to the local SQLite DB.
+        args: CLI arguments namespace (optional).
+        log_path (str): Path to the log file for this run (optional).
+    Returns:
+        None. Logs results and optionally writes run metadata to DB.
     """
     num_records, success = 0, False
     dt_str = dt.strftime(CONFIG['DATE_FORMAT'])

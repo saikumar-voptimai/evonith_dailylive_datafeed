@@ -1,0 +1,10 @@
+[INFO   | api_client           | L43] 2025-05-31T06:38:53+0530: fetch_api_data(date=05-30-2025, range_param=2) | api_client.py
+[INFO   | api_client           | L57] 2025-05-31T06:39:11+0530: API response status code: 200 | api_client.py
+[INFO   | api_client           | L122] 2025-05-31T06:39:11+0530: Fetched raw data for 05-30-2025 in 18.247402 seconds | api_client.py
+[INFO   | data_cleaner           | L20] 2025-05-31T06:39:11+0530: Starting clean_and_parse_data | data_cleaner.py
+[INFO   | data_cleaner           | L27] 2025-05-31T06:39:30+0530: clean_and_parse_data produced 3960 records | data_cleaner.py
+[INFO   | api_client           | L127] 2025-05-31T06:39:30+0530: Cleaned raw data for 05-30-2025 in 18.389668 seconds | api_client.py
+[INFO   | run_tracker           | L17] 2025-05-31T06:39:56+0530: Resolved absolute DB path: E:\Personal\MarketResearch\EvonithSteel\BlastFurnaceProject\PythonBlastFurnace\dailydatafeed\db\run_metadata.db | run_tracker.py
+[INFO   | run_tracker           | L38] 2025-05-31T06:39:56+0530: Tables in DB: [('runs',), ('sqlite_sequence',)] | run_tracker.py
+[INFO   | run_tracker           | L40] 2025-05-31T06:39:56+0530: Initialized database at db/run_metadata.db with runs table. | run_tracker.py
+[INFO   | main           | L55] 2025-05-31T06:39:56+0530: Parsed CLI args: Namespace(mode='daily', date=None, startdate='05-28-2025', enddate='05-29-2025', range=None, db_write=False, override=True, retain_file=False, debug=False, delay=120, use_db_params=False, db_host=None, db_org=None, log_run=False) | main.py

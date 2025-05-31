@@ -9,8 +9,13 @@ logger = logging.getLogger('pipeline')
 
 def clean_and_parse_data(raw_data: str) -> list[dict]:
     """
-    Cleans the raw XML string, removes unwanted scripts, parses to list of dicts, and parses datetime.
-    Returns a list of records with 'Timelogged' as ISO string or datetime.
+    Cleans a raw XML string by removing <script> tags, parses it into a list of dicts, and returns the result.
+    Args:
+        raw_data (str): Raw XML string from the API, possibly with embedded scripts.
+    Returns:
+        list[dict]: List of records parsed from the cleaned string.
+    Raises:
+        Exception: If parsing fails or the data is malformed.
     """
     logger.info("Starting clean_and_parse_data")
     cleaned = re.sub(r'<script.*?</script>', '', raw_data, flags=re.DOTALL).strip()
@@ -24,12 +29,13 @@ def clean_and_parse_data(raw_data: str) -> list[dict]:
 
 def clean_data(raw_data, date_str: str, mode: bool) -> List[Dict[str, str]]:
     """
-    Process raw data and write to InfluxDB and/or CSV.
+    Cleans and parses raw API data, returning a list of records or 0 on error.
     Args:
-        raw_data (str): Raw data from API
-        date_str (str): Date string for filename
-        mode (str): 'daily' or 'live'
-        retain_file (bool): Flag to retain the file after processing
+        raw_data (str): Raw data from API.
+        date_str (str): Date string for filename.
+        mode (str): 'daily' or 'live'.
+    Returns:
+        list[dict] or int: List of cleaned records, or 0 if parsing fails.
     """
     logger.info(f"Processing and writing data for date={date_str}, mode={mode}")
     try:

@@ -1,64 +1,146 @@
-## Evonith Daily and Live data loader
-I am scripting this python based code that runs using CLI and hence the argument parser.
+## Evonith Daily and Live Data Loader
 
-Like in my current role, we need a service that runs every night to load the data to any
-timeseries/other db and here we have chosen InfluxDB.
+This Python-based CLI tool ingests blast-furnace process variables into InfluxDB, supporting daily, historic, and live modes. It is designed for robust, automated data loading, downsampling, and optional local export for auditing or downstream workflows.
 
-The current script runs in three modes -
+---
 
-Daily - A cronjob to run the daily api and fetch data every day at 12.30AM, loads data for previous day, write it to influxDB.
-For example, on 03rd of April, it fetches the data for 02nd of April and flush writes it to the InfluxDB bucket_raw Bucket.
-Cron is configured on the VM/Server.
+### Modes of Operation
 
-Historic - A manually triggered job that runs for a specific date or range of dates given the startdate and enddate
+- **Daily**:  
+  Runs as a cronjob at 12:30 AM, fetching data for the previous day and writing to the `bucket_raw` InfluxDB bucket.  
+  Example: On April 3rd, fetches data for April 2nd.
 
-Live - A cronjob to run every 10s, fetch live data from live APi, write to influxDB. 
-Cron is configured on the VM/Server.
+- **Historic**:  
+  Manually triggered for a specific date or date range (via CLI flags).
 
-TODO:
-Parallely, the job when running in Daily/Historic modes does the Downsampling, for example, takes 5min average of the data and writes it to bucket_5min.
+- **Live**:  
+  Runs as a cronjob every 10 seconds, fetching real-time data from the live API and writing to InfluxDB.
 
-Code organisation:
+- **Downsampling**:  
+  In Daily/Historic modes, computes 5-minute averages and writes to a dedicated `bucket_5min`.
 
-## Business Logic
-- Provides a data‐loading service for blast‐furnace process variables, supporting:
-  - **Daily** mode (cronjob at 12:30 AM to ingest the previous day)  
-  - **Historic** mode (on‐demand by date or date range)  
-  - **Live** mode (poll API every ~10 s for real‐time values)
-- In Daily/Historic modes, computes 5 min downsampling and writes to a dedicated bucket.
-- Optional local dump of all raw points to text/CSV for auditing or downstream workflows.
+---
 
-## Technical Details
+### Code Organization
 
-### 1. Project Layout
-- **config/**: YAML for API endpoints, field mappings, logging, and timing (WAIT).
-- **src/main.py**: CLI entrypoint that parses arguments, orchestrates fetch → transform → write.
-- **src/pipeline/**:
-  - **api_client.py**: HTTP wrappers for historic vs live API calls.
-  - **data_cleaner.py**: Sanitizes JSON, parses timestamps, handles null/missing fields.
-  - **bf2_rename_map.py**: Applies field‐name mappings and builds InfluxDB point objects.
-  - **influx_writer.py**: Writes points to InfluxDB; supports full override or conditional writes.
-  - **write_to_file.py**: Serializes and writes points to text/CSV files by date and mode.
-  - **utils.py**: Helpers (e.g. `daterange` generator).
-- **logs/** and **output/**: Runtime logs and sample exports.
-- **test/**: Scaffold for pipeline unit tests.
+- **config/**:  
+  - `config.yaml`: API endpoints, credentials, bucket names, timing, etc.  
+  - `field_mappings.yaml`: Field name mappings for flexible schema evolution.  
+  - `logging.yaml`, `logging_debug.yaml`: Logging configuration.
 
-### 2. Data Flow in `main.py`
-1. Parse CLI flags: mode, dates, DB write/override, file‐dump, delays, host/org overrides.  
-2. Load environment (`.env`) and logging config.  
-3. **Live**: loop → `fetch_api_data_live()` → process → optional DB/file write → sleep.  
-4. **Daily/Historic**: for each date → `fetch_api_data(date)` → process → optional delay.  
+- **src/main.py**:  
+  CLI entrypoint. Parses arguments and orchestrates the fetch → transform → write pipeline.
+
+- **src/pipeline/**:  
+  - `api_client.py`: HTTP wrappers for historic and live API calls.  
+  - `data_cleaner.py`: Cleans and parses raw JSON, handles timestamps and missing/null fields.  
+  - `bf2_rename_map.py`: Applies field mappings and builds InfluxDB point objects.  
+  - `influx_writer.py`: Writes points to InfluxDB, supporting override and conditional writes.  
+  - `write_to_file.py`: Serializes and writes points to text/CSV files by date and mode.  
+  - `utils.py`: Helpers (e.g., `daterange` generator).
+
+- **logs/**: Runtime logs (per run/date).
+- **output/**: Sample exports and file dumps.
+- **test/**: Unit test scaffolding.
+
+---
+
+### Business Logic
+
+- Loads blast-furnace process variables in three modes (Daily, Historic, Live).
+- In Daily/Historic modes, performs 5-minute downsampling and writes to a dedicated bucket.
+- Optionally dumps all raw points to text/CSV for auditing or downstream workflows.
+
+---
+
+### Technical Details
+
+#### 1. Data Flow in `main.py`
+
+1. **Parse CLI flags**:  
+   - Mode, dates, DB write/override, file-dump, delays, host/org overrides.
+2. **Load environment**:  
+   - `.env` and logging config.
+3. **Live mode**:  
+   - Loop: `fetch_api_data_live()` → process → optional DB/file write → sleep.
+4. **Daily/Historic mode**:  
+   - For each date: `fetch_api_data(date)` → process → optional delay.
 5. **process_and_write()**:  
    a. `clean_and_parse_data(raw)` → list of records  
    b. `build_points(record, timestamp)` → list of InfluxDB points  
-   c. Conditionally call `write_to_influxdb()` based on override or `should_write_point()`  
+   c. Conditionally call `write_to_influxdb()` (override or `should_write_point()`)  
    d. If enabled, call `write_points_to_txt()` to dump all points.
 
-### 3. Configuration and Extensibility
-- **YAML** and **.env** drive endpoints, credentials, bucket names, logging levels, and timing.  
-- CLI flags allow toggling DB writes, override behavior, live vs historic ingestion, and file exports.  
+#### 2. Configuration and Extensibility
+
+- **YAML** and **.env** files drive endpoints, credentials, bucket names, logging levels, and timing.
+- CLI flags allow toggling DB writes, override behavior, live vs. historic ingestion, and file exports.
 - Field mappings can be updated without code changes via `field_mappings.yaml`.
 
-## Outstanding TODOs
-- **influx_writer.py**: implement existence check to avoid duplicate writes.  
-- **bf2_rename_map.py**: revisit handling of string/empty fields → convert to NULL where appropriate.
+---
+
+### Outstanding TODOs
+
+- **influx_writer.py**:  
+  Implement existence check to avoid duplicate writes.
+- **bf2_rename_map.py**:  
+  Revisit handling of string/empty fields—convert to NULL where appropriate.
+
+---
+
+### CLI Usage
+
+The main entrypoint is `main.py`, which supports the following arguments:
+
+- `--mode` (required):
+  - `daily` — Fetches and loads data for the previous day (default for scheduled runs)
+  - `historic` — Loads data for a specific date or date range
+  - `live` — Continuously fetches and loads real-time data
+- `--date` (optional):
+  - Date in `YYYY-MM-DD` format. Used in historic mode for a single day.
+- `--start-date` and `--end-date` (optional):
+  - Date range in `YYYY-MM-DD` format. Used in historic mode for multiple days.
+- `--write-db` (flag, optional):
+  - If set, writes data to InfluxDB. If omitted, no DB write occurs.
+- `--override` (flag, optional):
+  - If set, overwrites existing points in InfluxDB.
+- `--write-file` (flag, optional):
+  - If set, writes all points to a local file (txt/CSV) for auditing.
+- `--delay` (optional):
+  - Delay in seconds between processing each day (useful for rate limiting in historic mode).
+- `--host` and `--org` (optional):
+  - Override InfluxDB host and organization from config.
+- `--config` (optional):
+  - Path to a custom config YAML file.
+- `--log-level` (optional):
+  - Set logging level (e.g., DEBUG, INFO, WARNING).
+
+Example usage:
+
+```sh
+uv run python main.py --mode daily --write-db --write-file
+uv run python main.py --mode historic --start-date 2025-01-01 --end-date 2025-01-10 --write-db
+uv run python main.py --mode live --write-db
+```
+
+---
+
+### Running with uv
+
+1. Install [uv](https://github.com/astral-sh/uv) if not already installed:
+   ```sh
+   pip install uv
+   ```
+2. Install dependencies:
+   ```sh
+   uv pip install -r requirements.txt
+   # or, if using pyproject.toml:
+   uv pip install -r pyproject.toml
+   ```
+3. Run the CLI:
+   ```sh
+   uv run python main.py --mode daily --write-db
+   ```
+
+- All CLI arguments can be combined as needed.
+- Ensure your config files and environment variables are set up as described above.

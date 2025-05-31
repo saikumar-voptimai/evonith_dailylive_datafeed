@@ -4,12 +4,12 @@ import argparse
 import logging.config
 import yaml
 from dotenv import load_dotenv
-from pipeline.api_client import fetch_api_data_live
-from pipeline.api_client import process_and_write, process_datewise
-from pipeline.data_cleaner import clean_data
-from pipeline.run_tracker import init_db
-from pipeline.utils import setup_run_logging_yaml
-from pipeline.run_tracker import log_run
+from src.pipeline.api_client import fetch_api_data_live
+from src.pipeline.api_client import process_and_write, process_datewise
+from src.pipeline.data_cleaner import clean_data
+from src.pipeline.run_tracker import init_db
+from src.pipeline.utils import setup_run_logging_yaml
+from src.pipeline.run_tracker import log_run
 import os
 
 
@@ -66,9 +66,9 @@ def main():
 
     if args.mode == 'live':
         pid = os.getpid()
-        date_str = datetime.datetime.now(datetime.timezone.utc).strftime(CONFIG['DATE_FORMAT_FILENAME'])
-        time_str = datetime.datetime.now(datetime.timezone.utc).strftime(CONFIG['TIME_FORMAT_FILENAME'])
-        log_path = setup_run_logging_yaml(date_str, time_str, args.mode, '1', pid)
+        date_str_file = datetime.datetime.now(datetime.timezone.utc).strftime(CONFIG['DATE_FORMAT_FILENAME'])
+        time_str_file = datetime.datetime.now(datetime.timezone.utc).strftime(CONFIG['TIME_FORMAT_FILENAME'])
+        log_path = setup_run_logging_yaml(date_str_file, time_str_file, args.mode, '1', pid)
         logger.info('Running in live mode')
         st = datetime.datetime.now()
         logger.debug(f"Live mode - Run for timestamp UTC at {datetime.datetime.now(datetime.timezone.utc)}")
@@ -78,11 +78,11 @@ def main():
         except Exception as e:
             logger.exception(f"fetch_api_data_live() failed - {e}")
             sys.exit(1)
-        cleaned_list = clean_data(raw, date_str=date_str, mode='live')
-        num_records, points_file_path, time_str = process_and_write(cleaned_list, date_str=date_str, time_str=time_str, mode='live', args=args, log_path=log_path)
+        cleaned_list = clean_data(raw, date_str=date_str_file, mode='live')
+        num_records, points_file_path, time_str = process_and_write(cleaned_list, date_str_file=date_str_file, time_str_file=time_str_file, mode='live', args=args, log_path=log_path)
         et = datetime.datetime.now()
         run_time = datetime.datetime.now(datetime.timezone.utc).isoformat()
-        log_run(run_time, date_str, str(args.range or 1), args.mode, vars(args), pid, True, num_records, log_path, points_file_path)
+        log_run(run_time, date_str_file, str(args.range or 1), args.mode, vars(args), pid, True, num_records, log_path, points_file_path)
         excess_time = (datetime.timedelta(seconds=float(CONFIG['WAIT'])) - (et - st)).total_seconds()
         if excess_time < 0:
             logger.warning(f'API call & processing took longer than {CONFIG["WAIT"]}, by {excess_time:.2f}s')
@@ -107,6 +107,8 @@ def main():
                 log_path = setup_run_logging_yaml(dt.strftime(CONFIG['DATE_FORMAT_FILENAME']), range_param=str(i), mode=args.mode, pid=os.getpid())
                 process_datewise(dt, i, log_run_to_localdb=log_run_to_localdb, args=args, log_path=log_path)
     else:
+        if not args.date:
+            args.date = (datetime.datetime.now(datetime.timezone.utc) - datetime.timedelta(days=1)).strftime('%m-%d-%Y')
         logger.debug(f"Daily mode - Processing date: {args.date}")
         log_run_to_localdb = args.log_run
         if args.date:

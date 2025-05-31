@@ -7,7 +7,7 @@ import time
 from datetime import datetime
 import pytz
 from typing import List, Dict, Tuple
-from pipeline.bf2_rename_map import build_points
+from src.pipeline.bf2_rename_map import build_points
 from influxdb_client_3 import InfluxDBClient3, InfluxDBError, WriteOptions, write_client_options, SYNCHRONOUS
 import os
 import gzip
@@ -26,14 +26,17 @@ def write_points_to_txt(line_input_per_rec,
                         out_dir='output', 
                         filename='tmp'):
     """
-    Writes InfluxDB points (in line protocol) to a .txt file for testing.
+    Writes InfluxDB line protocol data to a .txt file for testing or auditing.
     Args:
-        points (list): List of influxdb_client_3.Point objects
-        date_str (str): Date string for filename
-        time_str (str): Time string for filename (optional, used in live mode)
-        range (int): Range parameter for Daily API. Set to 1 for live mode (dummy).
-        mode (str): 'daily' or 'live'
-        out_dir (str): Output directory
+        line_input_per_rec (str): InfluxDB line protocol string(s) to write.
+        date_str_file (str, optional): Date string for filename context.
+        time_str (str, optional): Time string for filename context (used in live mode).
+        range (str, optional): Range parameter for Daily API. Default is '1'.
+        mode (str, optional): 'daily' or 'live'.
+        out_dir (str, optional): Output directory for files.
+        filename (str, optional): Name of the file to write to.
+    Returns:
+        None. Writes data to file.
     """
     os.makedirs(out_dir, exist_ok=True)
 
@@ -50,11 +53,15 @@ def write_points_to_txt(line_input_per_rec,
 
 def write_to_influxdb(filename, args, batch_size=1000):
     """
-    Writes line protocol data to InfluxDB in batches of 7000 lines.
+    Writes line protocol data from a file to InfluxDB in batches.
     Args:
-        filename (str): Path to the line protocol file
-        args: CLI args with db connection info and flags
-        batch_size (int): Number of lines per batch
+        filename (str): Path to the line protocol file.
+        args: CLI args with DB connection info and flags.
+        batch_size (int, optional): Number of lines per batch. Default is 1000.
+    Returns:
+        None. Writes data to InfluxDB.
+    Raises:
+        Exception: If connection or write fails.
     """
     logger.info(f"write_to_influxdb called with filename={filename}, args={args}, batch_size={batch_size}")
 
@@ -130,24 +137,25 @@ def write_to_influxdb(filename, args, batch_size=1000):
 
 def process_and_write(cleaned_list: List[Dict[str, str]], 
                       date_str_file: str, 
-                      time_str:str=None, 
+                      time_str_file:str=None, 
                       range: int=1, 
                       mode: str='live', 
                       args: Dict=None, 
                       ouput_dir='output', 
                       log_path: str = None) -> Tuple[int, str, str]:    
     """
-    Process cleaned data and write to InfluxDB or file.
+    Processes cleaned data, writes to InfluxDB or file, and optionally gzips output.
     Args:
-        cleaned_list (list): List of cleaned records
-        date_str (str): Date string for filename
-        range (int): Range parameter for Daily API. Set to 1 for live mode (dummy).
-        mode (str): 'daily' or 'live'
-        args: CLI args with db connection info and flags
-        ouput_dir (str): Output directory for files
-        log_path (str): Path to the log file for this run
+        cleaned_list (list): List of cleaned records.
+        date_str_file (str): Date string for filename.
+        time_str (str, optional): Time string for filename (used in live mode).
+        range (int, optional): Range parameter for Daily API. Default is 1.
+        mode (str, optional): 'daily' or 'live'.
+        args (dict, optional): CLI args with DB connection info and flags.
+        ouput_dir (str, optional): Output directory for files.
+        log_path (str, optional): Path to the log file for this run.
     Returns:
-        int: Number of records processed
+        tuple: (number of records processed, final points file path or None, time string or None)
     """
     record_count = len(cleaned_list)
     write_filename = os.path.join(ouput_dir, f"tmp_{os.getpid()}.txt")
@@ -191,8 +199,13 @@ def process_and_write(cleaned_list: List[Dict[str, str]],
 
 
 def should_write_point(point, args):
-    """Stub for conditional write; logs inputs and default behavior
-    Returns True to write all points. Implement diff logic as needed.
+    """
+    Determines whether a point should be written to InfluxDB (stub; always returns True).
+    Args:
+        point (dict): The data point to check.
+        args: CLI args with override flag.
+    Returns:
+        bool: True if the point should be written (default), False otherwise.
     """
     logger.info(f"should_write_point called for point={point}, override={args.override}")
     # TODO: Implement logic to check if point already exists in DB

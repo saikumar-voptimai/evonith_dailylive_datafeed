@@ -3,8 +3,6 @@ Utility functions for date parsing, range, and data checking.
 """
 from datetime import datetime, timedelta
 import logging
-import os
-from typing import Optional
 import yaml
 import logging.config
 
@@ -13,6 +11,11 @@ logger = logging.getLogger('pipeline')
 def daterange(start_date, end_date):
     """
     Yields date strings from start_date to end_date (inclusive) in MM-DD-YYYY format.
+    Args:
+        start_date (str): Start date in MM-DD-YYYY format.
+        end_date (str): End date in MM-DD-YYYY format.
+    Yields:
+        str: Date string in MM-DD-YYYY format for each day in the range.
     """
     logger.info(f"daterange called with start_date={start_date}, end_date={end_date}")
     start = datetime.strptime(start_date, '%m-%d-%Y')
@@ -30,7 +33,11 @@ def daterange(start_date, end_date):
 def check_existing_data(cleaned_data, args):
     """
     Stub for checking if data already exists in InfluxDB and if value difference > 0.000001.
-    Returns False to always write (implement as needed).
+    Args:
+        cleaned_data (list): List of cleaned records to check.
+        args: CLI args or config for DB connection (unused in stub).
+    Returns:
+        bool: False (always writes; implement as needed).
     """
     logger.info("check_existing_data called (stub)")
     # TODO: implement existence and delta logic
@@ -39,16 +46,17 @@ def check_existing_data(cleaned_data, args):
 
 def setup_run_logging_yaml(date_str: str, time_str: str=None, mode: str='live', range_param: str=None, pid: int=None, log_dir: str = "logs", yaml_path: str = "config/logging.yaml") -> str:
     """
-    Set up per-run logging using a YAML config, but with a dynamic log file path.
+    Sets up per-run logging using a YAML config, with a dynamic log file path.
     Args:
-        date_str: Date string for the run (e.g. '05-24-2025')
-        mode: 'daily' or 'live'
-        range_param: Range parameter as string
-        pid: Process ID
-        log_dir: Directory to store log files
-        yaml_path: Path to the YAML logging config
+        date_str (str): Date string for the run (e.g. '05-24-2025').
+        time_str (str, optional): Time string for the run (used in live mode).
+        mode (str, optional): 'daily' or 'live'.
+        range_param (str, optional): Range parameter as string.
+        pid (int, optional): Process ID.
+        log_dir (str, optional): Directory to store log files.
+        yaml_path (str, optional): Path to the YAML logging config.
     Returns:
-        The path to the log file for this run.
+        str: The path to the log file for this run.
     """
     import os
     os.makedirs(log_dir, exist_ok=True)

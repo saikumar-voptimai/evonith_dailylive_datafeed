@@ -19,8 +19,11 @@ STRING_FIELDS = {
 
 def get_measurement_and_field(raw_key: str):
     """
-    Get the measurement and field name for a given raw key.
-    Returns a tuple (measurement, field) or (None, None) if not found.
+    Returns the measurement and field name for a given raw key based on field mappings.
+    Args:
+        raw_key (str): The raw variable name from the API data.
+    Returns:
+        tuple: (measurement, field) if found, else (None, None).
     """
     if raw_key in TEMP_PARAMS_MAP:
         return ("temperature_profile", TEMP_PARAMS_MAP[raw_key])
@@ -38,8 +41,11 @@ def get_measurement_and_field(raw_key: str):
 
 def get_numeric(value):
     """
-    Convert a value to a numeric type (int or float).
-    Returns None if the value is empty or cannot be converted.
+    Converts a value to a float if possible, or returns None if empty or not convertible.
+    Args:
+        value: The value to convert (str, int, float, or None).
+    Returns:
+        float or None: Numeric value or None if conversion fails.
     """
     try:
         if isinstance(value, str) and value.strip() == '':
@@ -50,8 +56,12 @@ def get_numeric(value):
 
 def build_points(api_dict: dict, ts) -> str:
     """
-    Turn a JSON payload into one or many points, each in the correct measurement/table.
-    Returns a list of influxdb_client.Point objects, one per measurement/variable.
+    Converts a dictionary of API data for a single timestamp into InfluxDB line protocol string(s).
+    Args:
+        api_dict (dict): Dictionary of variable names and values for a single timestamp.
+        ts (datetime): Timestamp for the data point.
+    Returns:
+        str: InfluxDB line protocol string(s) for all valid variables in api_dict.
     """
     logger.debug(f"Building points for timestamp: {ts}")
     logger.debug(f"Total {len(api_dict)} variables observed.")

@@ -1,0 +1,7 @@
+[INFO   | api_client           | L43] 2025-05-31T21:29:51+0530: fetch_api_data(date=05-29-2025, range_param=1) | api_client.py
+[INFO   | api_client           | L57] 2025-05-31T21:30:08+0530: API response status code: 200 | api_client.py
+[INFO   | api_client           | L122] 2025-05-31T21:30:09+0530: Fetched raw data for 05-29-2025 in 17.910086 seconds | api_client.py
+[INFO   | data_cleaner           | L20] 2025-05-31T21:30:09+0530: Starting clean_and_parse_data | data_cleaner.py
+[INFO   | data_cleaner           | L27] 2025-05-31T21:31:04+0530: clean_and_parse_data produced 4320 records | data_cleaner.py
+[INFO   | api_client           | L127] 2025-05-31T21:31:04+0530: Cleaned raw data for 05-29-2025 in 54.806034 seconds | api_client.py
+[INFO   | influx_writer           | L49] 2025-05-31T21:31:04+0530: Creating new file output\tmp_49776.txt | influx_writer.py

@@ -7,7 +7,11 @@ logger = logging.getLogger('pipeline')
 
 def init_db(db_path='db/run_metadata.db'):
     """
-    Initialize the local SQLite DB and create runs table if not exists.
+    Initializes the local SQLite database and creates the 'runs' table if it does not exist.
+    Args:
+        db_path (str, optional): Path to the SQLite DB file. Default is 'db/run_metadata.db'.
+    Returns:
+        None. Creates DB and table if needed.
     """
     os.makedirs(os.path.dirname(db_path), exist_ok=True)
     logger.info(f"Resolved absolute DB path: {os.path.abspath(db_path)}")
@@ -38,20 +42,21 @@ def init_db(db_path='db/run_metadata.db'):
 
 def log_run(run_time: str, date_run: str, range_param: str, mode: str, parameters: dict, process_id: int, success: int, num_records: int, log_path: str, points_file_path: str, db_path: str = 'db/run_metadata.db') -> None:
     """
-    Log a pipeline run to the SQLite DB. Perform an upsert based on date_run, range, and mode.
+    Logs a pipeline run to the SQLite DB, performing an upsert based on date_run, range, and mode.
     Args:
-        run_time: Timestamp of the run
-        date_run: Date string for the run
-        range_param: Range parameter
-        mode: 'daily' or 'live'
-        parameters: Parameters used for the run
-        process_id: PID
-        success: Whether the run succeeded
-        num_records: Number of records processed
-        log_path: Path to the log file
-        points_file_path: Path to the points file
-        mode: 'daily' or 'live'
-        db_path: Path to the SQLite DB
+        run_time (str): Timestamp of the run.
+        date_run (str): Date string for the run.
+        range_param (str): Range parameter.
+        mode (str): 'daily' or 'live'.
+        parameters (dict): Parameters used for the run.
+        process_id (int): PID of the process.
+        success (int): 1 if the run succeeded, 0 otherwise.
+        num_records (int): Number of records processed.
+        log_path (str): Path to the log file.
+        points_file_path (str): Path to the points file.
+        db_path (str, optional): Path to the SQLite DB.
+    Returns:
+        None. Inserts or updates the run record in the DB.
     """
     logger.info(f"Resolved absolute DB path: {os.path.abspath(db_path)}")
     conn = sqlite3.connect(db_path)

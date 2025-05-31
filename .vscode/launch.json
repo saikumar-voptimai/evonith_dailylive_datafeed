@@ -25,7 +25,7 @@
       "request": "launch",
       "program": "${file}",
       "console": "integratedTerminal",
-      "args": ["--mode=daily", "--db-write=True", "--date=05-27-2025", "--retain-file=False", "--debug=True", "--log-run=False"],
+      "args": ["--mode=daily", "--db-write=True", "--retain-file=True", "--debug=True", "--log-run=True"],
     }
   ]
 }
