@@ -3,7 +3,7 @@ name: CI/CD Deploy to Raspberry Pi
 
 on:
   push:
-    branches: [ main ]
+    branches: [ release ]
 
 jobs:
   test-build-deploy:
@@ -12,7 +12,7 @@ jobs:
       PI_HOST: ${{ secrets.PI_HOST }}
       PI_USER: ${{ secrets.PI_USER }}
       PI_SSH_KEY: ${{ secrets.PI_SSH_KEY }}
-      PROJECT_DIR: /opt/blastfurnace
+      PROJECT_DIR: /home/voptimaise/opt/blastfurnace
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -20,7 +20,7 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
-          python-version: '3.11'
+          python-version: '3.12'
 
       - name: Install uv
         run: pip install uv
@@ -30,8 +30,8 @@ jobs:
 
       - name: Run unittests
         run: |
-          mkdir -p test_logs
-          python -m unittest discover -s test
+          if [ ! -d test_logs ]; then mkdir test_logs; fi
+          uv run python -m unittest discover -s test
 
       - name: Get version
         id: version

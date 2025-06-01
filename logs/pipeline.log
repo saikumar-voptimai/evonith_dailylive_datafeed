@@ -69,3 +69,8 @@
 [DEBUG   | main           | L110] 2025-05-27T23:58:31+0530: Daily mode - Processing date: 05-27-2025 | main.py
 [DEBUG   | main           | L110] 2025-05-29T06:54:30+0530: Daily mode - Processing date: 05-28-2025 | main.py
 [DEBUG   | main           | L112] 2025-05-30T13:06:02+0530: Daily mode - Processing date: 05-29-2025 | main.py
+[DEBUG   | main           | L114] 2025-06-01T18:16:28+0530: Daily mode - Processing date: 05-31-2025 | main.py
+[DEBUG   | main           | L114] 2025-06-01T18:42:57+0530: Daily mode - Processing date: 05-30-2025 | main.py
+[DEBUG   | main           | L97] 2025-06-01T18:58:24+0530: Range mode - Processing date range: 2025-05-25 00:00:00 to 2025-05-26 00:00:00 | main.py
+[DEBUG   | main           | L104] 2025-06-01T18:58:24+0530: Processing date 2025-05-25 00:00:00 | main.py
+[DEBUG   | main           | L114] 2025-06-01T19:02:34+0530: Daily mode - Processing date: 05-26-2025 | main.py

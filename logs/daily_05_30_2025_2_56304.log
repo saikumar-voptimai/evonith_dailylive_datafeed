@@ -1,0 +1,25 @@
+[INFO   | api_client           | L43] 2025-06-01T18:45:54+0530: fetch_api_data(date=05-30-2025, range_param=2) | api_client.py
+[INFO   | api_client           | L57] 2025-06-01T18:46:12+0530: API response status code: 200 | api_client.py
+[INFO   | api_client           | L122] 2025-06-01T18:46:12+0530: Fetched raw data for 05-30-2025 in 17.81814 seconds | api_client.py
+[INFO   | data_cleaner           | L20] 2025-06-01T18:46:12+0530: Starting clean_and_parse_data | data_cleaner.py
+[INFO   | data_cleaner           | L27] 2025-06-01T18:46:20+0530: clean_and_parse_data produced 3960 records | data_cleaner.py
+[INFO   | api_client           | L127] 2025-06-01T18:46:20+0530: Cleaned raw data for 05-30-2025 in 7.507151 seconds | api_client.py
+[INFO   | influx_writer           | L49] 2025-06-01T18:46:20+0530: Creating new file output\tmp_56304.txt | influx_writer.py
+[INFO   | influx_writer           | L66] 2025-06-01T18:46:24+0530: write_to_influxdb called with filename=output\tmp_56304.txt, args=Namespace(mode='daily', date='05-30-2025', startdate=None, enddate=None, range=None, db_write=True, override=True, retain_file=True, debug=True, delay=120, use_db_params=False, db_host=None, db_org=None, log_run=True), batch_size=5000 | influx_writer.py
+[INFO   | influx_writer           | L71] 2025-06-01T18:46:24+0530: Connecting to InfluxDB at https://eu-central-1-1.aws.cloud2.influxdata.com, org=Blast Furnace, Evonith | influx_writer.py
+[INFO   | influx_writer           | L93] 2025-06-01T18:46:24+0530: Writing to bucket: bf2_evonith_raw | influx_writer.py
+[INFO   | influx_writer           | L106] 2025-06-01T18:46:24+0530: Successfully connected to InfluxDB | influx_writer.py
+[INFO   | influx_writer           | L108] 2025-06-01T18:46:24+0530: Wrote batch of 5000 lines to InfluxDB. Total written: 5000. | influx_writer.py
+[INFO   | influx_writer           | L106] 2025-06-01T18:46:43+0530: Successfully connected to InfluxDB | influx_writer.py
+[INFO   | influx_writer           | L108] 2025-06-01T18:46:43+0530: Wrote batch of 5000 lines to InfluxDB. Total written: 10000. | influx_writer.py
+[INFO   | influx_writer           | L106] 2025-06-01T18:47:02+0530: Successfully connected to InfluxDB | influx_writer.py
+[INFO   | influx_writer           | L108] 2025-06-01T18:47:02+0530: Wrote batch of 5000 lines to InfluxDB. Total written: 15000. | influx_writer.py
+[INFO   | influx_writer           | L106] 2025-06-01T18:47:22+0530: Successfully connected to InfluxDB | influx_writer.py
+[INFO   | influx_writer           | L108] 2025-06-01T18:47:22+0530: Wrote batch of 5000 lines to InfluxDB. Total written: 20000. | influx_writer.py
+[INFO   | influx_writer           | L122] 2025-06-01T18:47:41+0530: Successfully connected to InfluxDB | influx_writer.py
+[INFO   | influx_writer           | L128] 2025-06-01T18:47:59+0530: Wrote final batch of 3760 lines to InfluxDB | influx_writer.py
+[INFO   | influx_writer           | L129] 2025-06-01T18:47:59+0530: Finished writing all lines from output\tmp_56304.txt to InfluxDB | influx_writer.py
+[INFO   | influx_writer           | L180] 2025-06-01T18:47:59+0530: Write to influxdb took: 95.787025 seconds | influx_writer.py
+[INFO   | influx_writer           | L187] 2025-06-01T18:47:59+0530: Renaming file output\tmp_56304.txt to output\date_05_30_2025_Range2.txt | influx_writer.py
+[INFO   | influx_writer           | L193] 2025-06-01T18:48:01+0530: Gzipped points file to output\date_05_30_2025_Range2.txt.gz | influx_writer.py
+[INFO   | run_tracker           | L61] 2025-06-01T18:48:01+0530: Resolved absolute DB path: E:\Personal\MarketResearch\EvonithSteel\BlastFurnaceProject\PythonBlastFurnace\dailydatafeed\db\run_metadata.db | run_tracker.py

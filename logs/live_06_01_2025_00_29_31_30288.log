@@ -1,0 +1,14 @@
+[INFO   | main           | L74] 2025-06-01T05:59:31+0530: Running in live mode | main.py
+[INFO   | api_client           | L81] 2025-06-01T05:59:31+0530: fetch_api_data_live() called | api_client.py
+[INFO   | api_client           | L90] 2025-06-01T05:59:32+0530: API response status code: 200 | api_client.py
+[INFO   | data_cleaner           | L40] 2025-06-01T05:59:32+0530: Processing and writing data for date=06_01_2025, mode=live | data_cleaner.py
+[INFO   | data_cleaner           | L20] 2025-06-01T05:59:32+0530: Starting clean_and_parse_data | data_cleaner.py
+[INFO   | data_cleaner           | L27] 2025-06-01T05:59:32+0530: clean_and_parse_data produced 1 records | data_cleaner.py
+[INFO   | influx_writer           | L49] 2025-06-01T05:59:32+0530: Creating new file output\tmp_30288.txt | influx_writer.py
+[INFO   | influx_writer           | L66] 2025-06-01T05:59:32+0530: write_to_influxdb called with filename=output\tmp_30288.txt, args=Namespace(mode='live', date=None, startdate=None, enddate=None, range=None, db_write=True, override=True, retain_file=True, debug=True, delay=120, use_db_params=False, db_host=None, db_org=None, log_run=False), batch_size=5000 | influx_writer.py
+[INFO   | influx_writer           | L71] 2025-06-01T05:59:32+0530: Connecting to InfluxDB at https://eu-central-1-1.aws.cloud2.influxdata.com, org=Blast Furnace, Evonith | influx_writer.py
+[INFO   | influx_writer           | L93] 2025-06-01T05:59:32+0530: Writing to bucket: bf2_evonith_raw | influx_writer.py
+[INFO   | influx_writer           | L122] 2025-06-01T05:59:32+0530: Successfully connected to InfluxDB | influx_writer.py
+[INFO   | influx_writer           | L128] 2025-06-01T05:59:33+0530: Wrote final batch of 6 lines to InfluxDB | influx_writer.py
+[INFO   | influx_writer           | L129] 2025-06-01T05:59:33+0530: Finished writing all lines from output\tmp_30288.txt to InfluxDB | influx_writer.py
+[INFO   | influx_writer           | L180] 2025-06-01T05:59:33+0530: Write to influxdb took: 1.250721 seconds | influx_writer.py
