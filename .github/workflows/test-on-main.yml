@@ -20,12 +20,6 @@ jobs:
       - name: Install uv
         run: pip install uv
 
-      - name: Create virtual environment
-        run: uv venv
-
-      - name: Install dependencies from lockfile
-        run: uv pip install
-
       - name: Run unittests with coverage
         run: |
           mkdir -p test_logs
