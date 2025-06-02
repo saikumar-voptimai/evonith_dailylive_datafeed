@@ -1,11 +1,12 @@
-import sqlite3
 import json
-import os
 import logging
+import os
+import sqlite3
 
-logger = logging.getLogger('pipeline')
+logger = logging.getLogger("pipeline")
 
-def init_db(db_path='db/run_metadata.db'):
+
+def init_db(db_path="db/run_metadata.db"):
     """
     Initializes the local SQLite database and creates the 'runs' table if it does not exist.
     Args:
@@ -17,7 +18,8 @@ def init_db(db_path='db/run_metadata.db'):
     logger.info(f"Resolved absolute DB path: {os.path.abspath(db_path)}")
     conn = sqlite3.connect(db_path)
     cur = conn.cursor()
-    cur.execute('''
+    cur.execute(
+        """
         CREATE TABLE IF NOT EXISTS runs (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             run_time TEXT,
@@ -32,7 +34,8 @@ def init_db(db_path='db/run_metadata.db'):
             points_file_path TEXT,
             UNIQUE(date_run, range, mode) ON CONFLICT REPLACE
         )
-    ''')
+    """
+    )
     conn.commit()
     cur.execute("SELECT name FROM sqlite_master WHERE type='table';")
     logger.info(f"Tables in DB: {cur.fetchall()}")
@@ -40,7 +43,19 @@ def init_db(db_path='db/run_metadata.db'):
     logger.info(f"Initialized database at {db_path} with runs table.")
 
 
-def log_run(run_time: str, date_run: str, range_param: str, mode: str, parameters: dict, process_id: int, success: int, num_records: int, log_path: str, points_file_path: str, db_path: str = 'db/run_metadata.db') -> None:
+def log_run(
+    run_time: str,
+    date_run: str,
+    range_param: str,
+    mode: str,
+    parameters: dict,
+    process_id: int,
+    success: int,
+    num_records: int,
+    log_path: str,
+    points_file_path: str,
+    db_path: str = "db/run_metadata.db",
+) -> None:
     """
     Logs a pipeline run to the SQLite DB, performing an upsert based on date_run, range, and mode.
     Args:
@@ -62,7 +77,7 @@ def log_run(run_time: str, date_run: str, range_param: str, mode: str, parameter
     conn = sqlite3.connect(db_path)
     cur = conn.cursor()
     cur.execute(
-        '''
+        """
         INSERT INTO runs (run_time, date_run, range, mode, parameters, process_id, success, num_records, log_path, points_file_path)
         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
         ON CONFLICT(date_run, range, mode) DO UPDATE SET
@@ -73,8 +88,19 @@ def log_run(run_time: str, date_run: str, range_param: str, mode: str, parameter
             num_records=excluded.num_records,
             log_path=excluded.log_path,
             points_file_path=excluded.points_file_path
-        ''',
-        (run_time, date_run, range_param, mode, json.dumps(parameters), process_id, int(success), num_records, log_path, points_file_path)
+        """,
+        (
+            run_time,
+            date_run,
+            range_param,
+            mode,
+            json.dumps(parameters),
+            process_id,
+            int(success),
+            num_records,
+            log_path,
+            points_file_path,
+        ),
     )
     conn.commit()
     conn.close()

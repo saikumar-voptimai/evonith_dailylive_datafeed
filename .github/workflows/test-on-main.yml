@@ -20,10 +20,23 @@ jobs:
       - name: Install uv
         run: pip install uv
 
-      - name: Install dependencies
-        run: uv pip install -r requirements.txt
+      - name: Create virtual environment
+        run: uv venv
 
-      - name: Run unittests
+      - name: Install dependencies from lockfile
+        run: uv pip install
+
+      - name: Run unittests with coverage
         run: |
-          if [ ! -d test_logs ]; then mkdir test_logs; fi
-          uv run python -m unittest discover -s test
+          mkdir -p test_logs
+          uv run coverage run -m unittest discover -s test
+          uv run coverage report --fail-under=90
+
+      - name: Check formatting with Black
+        run: uv run black --check .
+
+      - name: Check import sorting with isort
+        run: uv run isort --check-only .
+
+      - name: Lint with pylint
+        run: uv run pylint src --fail-under=7.0

@@ -1,11 +1,14 @@
 """
 Cleans and parses raw XML data string to a list of dicts, with datetime parsing.
 """
-import re
+
 import ast
 import logging
-from typing import List, Dict
-logger = logging.getLogger('pipeline')
+import re
+from typing import Dict, List
+
+logger = logging.getLogger("pipeline")
+
 
 def clean_and_parse_data(raw_data: str) -> list[dict]:
     """
@@ -18,7 +21,7 @@ def clean_and_parse_data(raw_data: str) -> list[dict]:
         Exception: If parsing fails or the data is malformed.
     """
     logger.info("Starting clean_and_parse_data")
-    cleaned = re.sub(r'<script.*?</script>', '', raw_data, flags=re.DOTALL).strip()
+    cleaned = re.sub(r"<script.*?</script>", "", raw_data, flags=re.DOTALL).strip()
     try:
         records = ast.literal_eval(cleaned)
     except Exception as e:
@@ -26,6 +29,7 @@ def clean_and_parse_data(raw_data: str) -> list[dict]:
         raise
     logger.info(f"clean_and_parse_data produced {len(records)} records")
     return records
+
 
 def clean_data(raw_data, date_str: str, mode: bool) -> List[Dict[str, str]]:
     """

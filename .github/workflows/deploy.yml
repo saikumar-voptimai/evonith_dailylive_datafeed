@@ -12,7 +12,7 @@ jobs:
       PI_HOST: ${{ secrets.PI_HOST }}
       PI_USER: ${{ secrets.PI_USER }}
       PI_SSH_KEY: ${{ secrets.PI_SSH_KEY }}
-      PROJECT_DIR: /home/voptimaise/opt/blastfurnace
+      PROJECT_DIR: /home/voptimaise/evonith/dataloading/onlinedata
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -25,13 +25,20 @@ jobs:
       - name: Install uv
         run: pip install uv
 
-      - name: Install dependencies
-        run: uv pip install -r requirements.txt
-
-      - name: Run unittests
+      - name: Run unittests with coverage
         run: |
-          if [ ! -d test_logs ]; then mkdir test_logs; fi
-          uv run python -m unittest discover -s test
+          mkdir -p test_logs
+          uv run coverage run -m unittest discover -s test
+          uv run coverage report --fail-under=80
+
+      - name: Check formatting with Black
+        run: uv run black --check .
+
+      - name: Check import sorting with isort
+        run: uv run isort --check-only .
+
+      - name: Lint with pylint
+        run: uv run pylint src --fail-under=5.0
 
       - name: Get version
         id: version
@@ -42,14 +49,14 @@ jobs:
           VERSION="$YY.$WEEK.$PATCH"
           echo "version=$VERSION" >> $GITHUB_OUTPUT
 
-      - name: Bundle project with uv
-        run: |
-          uv pip compile --all-extras --output-file uv.lock
+      - name: Compile lockfile
+        run: uv pip compile --all-extras --output-file=uv.lock
 
       - name: Archive project
         run: |
           mkdir -p dist
-          tar czf dist/blastfurnace-${{ steps.version.outputs.version }}.tar.gz . --exclude=dist --exclude=.git --exclude=test_logs
+          tar czf dist/bf_eml_datafeed-${{ steps.version.outputs.version }}.tar.gz . \
+            --exclude=dist --exclude=.git --exclude=test_logs
 
       - name: Copy to Raspberry Pi
         uses: appleboy/scp-action@v0.1.7
@@ -57,8 +64,8 @@ jobs:
           host: ${{ env.PI_HOST }}
           username: ${{ env.PI_USER }}
           key: ${{ env.PI_SSH_KEY }}
-          source: "dist/blastfurnace-${{ steps.version.outputs.version }}.tar.gz"
-          target: "${{ env.PROJECT_DIR }}/releases/"
+          source: "dist/bf_eml_datafeed-${{ steps.version.outputs.version }}.tar.gz"
+          target: "${{ env.PROJECT_DIR }}/"
 
       - name: Deploy and update symlink
         uses: appleboy/ssh-action@v1.0.3
@@ -68,15 +75,24 @@ jobs:
           key: ${{ env.PI_SSH_KEY }}
           script: |
             set -e
-            cd $PROJECT_DIR/releases
-            tar xzf blastfurnace-${{ steps.version.outputs.version }}.tar.gz -C $PROJECT_DIR/releases
-            rm -f $PROJECT_DIR/current
-            ln -sfn $PROJECT_DIR/releases/blastfurnace-${{ steps.version.outputs.version }} $PROJECT_DIR/current
-            echo "Symlink updated to blastfurnace-${{ steps.version.outputs.version }}"
-            # Keep last 3 releases for rollback
-            ls -dt $PROJECT_DIR/releases/blastfurnace-* | tail -n +4 | xargs rm -rf || true
+            cd $PROJECT_DIR
+            VERSION="${{ steps.version.outputs.version }}"
+            ARCHIVE="bf_eml_datafeed-$VERSION.tar.gz"
+            EXTRACTED_DIR="$PROJECT_DIR/bf_eml_datafeed-$VERSION"
+
+            mkdir -p "$EXTRACTED_DIR"
+            tar xzf "$ARCHIVE" -C "$EXTRACTED_DIR" --strip-components=1
+
+            python3.12 -m venv "$EXTRACTED_DIR/.venv"
+            "$EXTRACTED_DIR/.venv/bin/pip" install uv
+            "$EXTRACTED_DIR/.venv/bin/uv" pip install
+
+            ln -sfn "$EXTRACTED_DIR" "$PROJECT_DIR/current"
+            echo "Symlink updated to bf_eml_datafeed-$VERSION"
+
+            ls -dt $PROJECT_DIR/bf_eml_datafeed-* | tail -n +4 | xargs rm -rf || true
 
       - name: Rollback instructions
         run: |
-          echo "To rollback, SSH into the Pi and repoint the symlink:"
-          echo "ln -sfn /opt/blastfurnace/releases/blastfurnace-<old_version> /opt/blastfurnace/current"
+          echo "To rollback, SSH into the Pi and repoint the symlink manually:"
+          echo "ln -sfn /home/voptimaise/evonith/dataloading/onlinedata/bf_eml_datafeed-<old_version> /home/voptimaise/evonith/dataloading/onlinedata/current"

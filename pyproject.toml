@@ -4,13 +4,15 @@ version = "0.1.0"
 description = ""
 authors = [{ name = "Saikumar Yeddula", email = "saikumar.yeddula@v-optimai.com" }]
 requires-python = "~=3.9"
-readme = "README.md"
 dependencies = [
     "influxdb3-python>=0.12.0,<0.13",
     "python-dotenv>=1.1.0,<2",
     "pyyaml>=6.0.2,<7",
     "requests>=2.32.3,<3",
     "pytz>=2023.3,<2025",
+    "black>=25.1.0",
+    "isort>=6.0.1",
+    "coverage>=7.8.2",
 ]
 
 [build-system]
