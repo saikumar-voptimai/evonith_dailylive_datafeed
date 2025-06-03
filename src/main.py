@@ -7,8 +7,11 @@ import sys
 import yaml
 from dotenv import load_dotenv
 
-from src.pipeline.api_client import (fetch_api_data_live, process_and_write,
-                                     process_datewise)
+from src.pipeline.api_client import (
+    fetch_api_data_live,
+    process_and_write,
+    process_datewise,
+)
 from src.pipeline.data_cleaner import clean_data
 from src.pipeline.run_tracker import init_db, log_run
 from src.pipeline.utils import setup_run_logging_yaml

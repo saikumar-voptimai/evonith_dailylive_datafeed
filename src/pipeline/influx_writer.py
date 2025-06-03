@@ -11,8 +11,13 @@ from typing import Dict, List, Tuple
 
 import pytz
 import yaml
-from influxdb_client_3 import (SYNCHRONOUS, InfluxDBClient3, InfluxDBError,
-                               WriteOptions, write_client_options)
+from influxdb_client_3 import (
+    SYNCHRONOUS,
+    InfluxDBClient3,
+    InfluxDBError,
+    WriteOptions,
+    write_client_options,
+)
 
 from src.pipeline.bf2_rename_map import build_points
 

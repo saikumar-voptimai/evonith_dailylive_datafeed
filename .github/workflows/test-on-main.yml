@@ -29,8 +29,5 @@ jobs:
       - name: Check formatting with Black
         run: uv run black --check .
 
-      - name: Check import sorting with isort
-        run: uv run isort --check-only .
-
       - name: Lint with pylint
         run: uv run pylint src --fail-under=7.0

@@ -3,8 +3,7 @@ import datetime
 import unittest
 from unittest.mock import MagicMock, patch
 
-from src.pipeline import (api_client, bf2_rename_map, data_cleaner,
-                          influx_writer)
+from src.pipeline import api_client, bf2_rename_map, data_cleaner, influx_writer
 
 
 class TestFullPipeline(unittest.TestCase):
