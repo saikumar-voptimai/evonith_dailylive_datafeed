@@ -144,7 +144,12 @@ def process_datewise(
 
             st = datetime.now()
             num_records, points_file_path, _ = process_and_write(
-                cleaned_list, dt_str_file, range=range_param, mode="daily", args=args, variables_list=variables_list
+                cleaned_list,
+                dt_str_file,
+                range=range_param,
+                mode="daily",
+                args=args,
+                variables_list=variables_list,
             )
             logger.debug(
                 f"Processed and wrote {num_records} records for {dt} in {(datetime.now() - st).total_seconds()} seconds"

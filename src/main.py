@@ -89,7 +89,7 @@ def main():
     parser.add_argument(
         "--variable-file",
         type=str,
-        help="Processes only those variables in the variable-file passed as .txt file." \
+        help="Processes only those variables in the variable-file passed as .txt file."
         "Only for range mode.",
     )
 
@@ -206,7 +206,7 @@ def main():
                     log_run_to_localdb=log_run_to_localdb,
                     args=args,
                     log_path=log_path,
-                    variables_list=variables_list
+                    variables_list=variables_list,
                 )
     else:
         if not args.date:

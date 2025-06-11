@@ -199,7 +199,11 @@ def process_and_write(
     for record in cleaned_list:
         # Filter record if variables_list is provided
         if variables_list is not None:
-            record = {k: v for k, v in record.items() if k in variables_list or k == "Timelogged"}
+            record = {
+                k: v
+                for k, v in record.items()
+                if k in variables_list or k == "Timelogged"
+            }
         if "Timelogged" in record:
             try:
                 dt_naive = datetime.strptime(
