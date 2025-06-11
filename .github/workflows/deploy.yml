@@ -77,9 +77,12 @@ jobs:
           port: 2222
           request_pty: true
           script: |
-            set -e
-            cd $PROJECT_DIR
+            set -ex
+            PROJECT_DIR="/home/voptimaise/evonith/dataloading/onlinedata"
             VERSION="${{ steps.version.outputs.version }}"
+            ARCHIVE="bf_eml_datafeed-$VERSION.tar.gz"
+            EXTRACTED_DIR="$PROJECT_DIR/bf_eml_datafeed-$VERSION"
+            cd $PROJECT_DIR
             ARCHIVE="bf_eml_datafeed-$VERSION.tar.gz"
             EXTRACTED_DIR="$PROJECT_DIR/bf_eml_datafeed-$VERSION"
 
