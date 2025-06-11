@@ -86,6 +86,12 @@ def main():
         default=False,
         help="To log the run-details on sqlitedb (True/False, default: False)",
     )
+    parser.add_argument(
+        "--variable-file",
+        type=str,
+        help="Processes only those variables in the variable-file passed as .txt file." \
+        "Only for range mode.",
+    )
 
     args = parser.parse_args()
 
@@ -175,6 +181,11 @@ def main():
         log_run_to_localdb = (
             args.log_run
         )  # True if args.log_run else False. Also False is date is today.
+        # Read variables_list from file if provided
+        variables_list = None
+        if hasattr(args, "variable_file") and args.variable_file:
+            with open(args.variable_file, "r") as vf:
+                variables_list = [line.strip() for line in vf if line.strip()]
         for dt in dates_list:
             logger.debug(f"Processing date {dt}")
             if dt == datetime.datetime.now(datetime.timezone.utc).date():
@@ -195,6 +206,7 @@ def main():
                     log_run_to_localdb=log_run_to_localdb,
                     args=args,
                     log_path=log_path,
+                    variables_list=variables_list
                 )
     else:
         if not args.date:
@@ -231,5 +243,6 @@ def main():
 
 
 if __name__ == "__main__":
+
     print("in main")
     main()

@@ -177,6 +177,7 @@ def process_and_write(
     args: Dict = None,
     ouput_dir="output",
     log_path: str = None,
+    variables_list=None,
 ) -> Tuple[int, str, str]:
     """
     Processes cleaned data, writes to InfluxDB or file, and optionally gzips output.
@@ -189,12 +190,16 @@ def process_and_write(
         args (dict, optional): CLI args with DB connection info and flags.
         ouput_dir (str, optional): Output directory for files.
         log_path (str, optional): Path to the log file for this run.
+        variables_list (list, optional): List of variables to filter and write.
     Returns:
         tuple: (number of records processed, final points file path or None, time string or None)
     """
     record_count = len(cleaned_list)
     write_filename = os.path.join(ouput_dir, f"tmp_{os.getpid()}.txt")
     for record in cleaned_list:
+        # Filter record if variables_list is provided
+        if variables_list is not None:
+            record = {k: v for k, v in record.items() if k in variables_list or k == "Timelogged"}
         if "Timelogged" in record:
             try:
                 dt_naive = datetime.strptime(

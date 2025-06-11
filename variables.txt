@@ -1,0 +1,15 @@
+BF2 charges per hour
+BF2 Coal rate actual value (Kg/THM)
+BF2 Coal rate Set value (Kg/THM)
+BF2 Coke rate (Kg/THM)
+BF2 Daily Steam injection (Kg/day)
+BF2 Fuel rate (Kg/THM)
+BF2 HM per charge (Ton)
+BF2 Nut Coke rate (Kg/THM)
+BF2 Oxygen enrichment (%)
+BF2 Oxygen Flow
+BF2 Production per hr
+BF2 Specific Oxygen actual
+BF2 Steam injection (Kg/hour)
+BF2 Theoritical Production per day
+BF2 Total Oxygen

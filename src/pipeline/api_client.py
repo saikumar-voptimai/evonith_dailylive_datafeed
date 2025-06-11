@@ -110,6 +110,7 @@ def process_datewise(
     log_run_to_localdb: bool,
     args=None,
     log_path: str = None,
+    variables_list=None,
 ):
     """
     Orchestrates fetching, cleaning, processing, and writing of data for a specific date and range.
@@ -119,6 +120,7 @@ def process_datewise(
         log_run_to_localdb (bool): Whether to log the run to the local SQLite DB.
         args: CLI arguments namespace (optional).
         log_path (str): Path to the log file for this run (optional).
+        variables_list (list, optional): List of variables to filter and write.
     Returns:
         None. Logs results and optionally writes run metadata to DB.
     """
@@ -142,7 +144,7 @@ def process_datewise(
 
             st = datetime.now()
             num_records, points_file_path, _ = process_and_write(
-                cleaned_list, dt_str_file, range=range_param, mode="daily", args=args
+                cleaned_list, dt_str_file, range=range_param, mode="daily", args=args, variables_list=variables_list
             )
             logger.debug(
                 f"Processed and wrote {num_records} records for {dt} in {(datetime.now() - st).total_seconds()} seconds"
