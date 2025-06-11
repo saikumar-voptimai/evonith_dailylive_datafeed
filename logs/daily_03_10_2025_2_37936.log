@@ -1,0 +1,2 @@
+[INFO   | api_client           | L47] 2025-06-11T06:34:40+0530: fetch_api_data(date=03-10-2025, range_param=2) | api_client.py
+[ERROR   | api_client           | L70] 2025-06-11T06:44:08+0530: API fetch failed (attempt 1): ('Connection broken: IncompleteRead(5759 bytes read, 4481 more expected)', IncompleteRead(5759 bytes read, 4481 more expected)) | api_client.py

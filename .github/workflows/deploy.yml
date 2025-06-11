@@ -47,7 +47,7 @@ jobs:
           echo "version=$VERSION" >> $GITHUB_OUTPUT
 
       - name: Compile lockfile
-        run: uv pip compile --all-extras --output-file=uv.lock
+        run: uv pip compile pyproject.toml --all-extras --output-file=uv.lock
 
       - name: Archive project
         run: |
