@@ -7,6 +7,7 @@ on:
 
 jobs:
   test-build-deploy:
+    environment: Kalpvoptpi1p Env
     runs-on: ubuntu-latest
     env:
       PI_HOST: ${{ secrets.PI_HOST }}
@@ -45,9 +46,6 @@ jobs:
           WEEK=$(date +"%V")
           VERSION="$YY.$WEEK.$PATCH"
           echo "version=$VERSION" >> $GITHUB_OUTPUT
-
-      - name: Compile lockfile
-        run: uv pip compile pyproject.toml --all-extras --output-file=uv.lock
 
       - name: Archive project
         run: |
