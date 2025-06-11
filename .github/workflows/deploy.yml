@@ -13,6 +13,7 @@ jobs:
       PI_HOST: ${{ secrets.PI_HOST }}
       PI_USER: ${{ secrets.PI_USER }}
       PI_SSH_KEY: ${{ secrets.PI_SSH_KEY }}
+      PI_PORT: ${{ secrets.PI_PORT }}
       PROJECT_DIR: /home/voptimaise/evonith/dataloading/onlinedata
     steps:
       - name: Checkout code
@@ -62,6 +63,7 @@ jobs:
           host: ${{ env.PI_HOST }}
           username: ${{ env.PI_USER }}
           key: ${{ env.PI_SSH_KEY }}
+          port: ${{ env.PI_PORT }}
           source: "dist/bf_eml_datafeed-${{ steps.version.outputs.version }}.tar.gz"
           target: "${{ env.PROJECT_DIR }}/"
 
@@ -71,6 +73,7 @@ jobs:
           host: ${{ env.PI_HOST }}
           username: ${{ env.PI_USER }}
           key: ${{ env.PI_SSH_KEY }}
+          port: ${{ env.PI_PORT }}
           script: |
             set -e
             cd $PROJECT_DIR
