@@ -26,6 +26,9 @@ jobs:
       - name: Install uv
         run: pip install uv
 
+      - name: Create virtual environment
+        run: uv venv
+
       - name: Run unittests with coverage
         run: |
           mkdir -p test_logs
@@ -50,8 +53,8 @@ jobs:
       - name: Archive project
         run: |
           mkdir -p dist
-          tar czf dist/bf_eml_datafeed-${{ steps.version.outputs.version }}.tar.gz . \
-            --exclude=dist --exclude=.git --exclude=test_logs
+          tar --exclude=dist --exclude=.git --exclude=test_logs \
+              -czf dist/bf_eml_datafeed-${{ steps.version.outputs.version }}.tar.gz .
 
       - name: Copy to Raspberry Pi
         uses: appleboy/scp-action@v0.1.7
