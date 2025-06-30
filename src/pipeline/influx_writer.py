@@ -237,7 +237,7 @@ def process_and_write(
         points_file_final = (
             os.path.join("output", f"date_{date_str_file}_Range{range}.txt")
             if mode == "daily"
-            else os.path.join("output", f"live_{date_str_file}_{time_str}.txt")
+            else os.path.join("output", f"live_{date_str_file}_{time_str_file}.txt")
         )
         logger.info(f"Renaming file {write_filename} to {points_file_final}")
         os.rename(write_filename, points_file_final)
