@@ -139,7 +139,7 @@ PROCESS PARAMS MAP:
   BF2 TUYERE VELOCITY: tuyere_velocity
   BF2 charges per hour: charges_per_hour
   BF2 Coal rate actual value (Kg/THM): coal_rate_actual_value
-  BF2 Coal rate Set value (Kg/THM): Coal_rate_Set_value
+  BF2 Coal rate Set value (Kg/THM): coal_rate_set_value
   BF2 Coke rate (Kg/THM): coke_rate
   BF2 Daily Steam injection (Kg/day): daily_steam_injection
   BF2 Fuel rate (Kg/THM): fuel_rate
@@ -156,11 +156,6 @@ PROCESS PARAMS MAP:
   TE_40532B Runner Temp CR side near to Taphole: runner_temp_cr_taphole
   TE_40532C Runner Temp PCI side near to skimmer: runner_temp_pci_skimmer
   TE_40532D Runner Temp CR side near to skimmer: runner_temp_cr_skimmer
-  Coal rate Set value : Coal_rate_Set_value
-
-
-
-
 
 HEATLOAD MAP:
   Heat load Row 6: heat_load_row_6  
