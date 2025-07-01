@@ -145,18 +145,20 @@ def main():
         )
         et = datetime.datetime.now()
         run_time = datetime.datetime.now(datetime.timezone.utc).isoformat()
-        log_run(
-            run_time,
-            date_str_file,
-            str(args.range or 1),
-            args.mode,
-            vars(args),
-            pid,
-            True,
-            num_records,
-            log_path,
-            points_file_path,
-        )
+        if args.log_run:
+            log_run(
+                run_time,
+                date_str_file=date_str_file,
+                time_str_file=time_str_file,
+                range=str(args.range or 1),
+                mode=args.mode,
+                vars=vars(args),
+                pid=pid,
+                success=True,
+                num_records=num_records,
+                log_path=log_path,
+                points_file_path=points_file_path,
+            )
         excess_time = (
             datetime.timedelta(seconds=float(CONFIG["WAIT"])) - (et - st)
         ).total_seconds()
@@ -180,7 +182,7 @@ def main():
         ]
         log_run_to_localdb = (
             args.log_run
-        )  # True if args.log_run else False. Also False is date is today.
+        )  # True if args.log_run else False. Also False if date is today.
         # Read variables_list from file if provided
         variables_list = None
         if hasattr(args, "variable_file") and args.variable_file:
