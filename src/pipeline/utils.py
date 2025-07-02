@@ -4,6 +4,7 @@ Utility functions for date parsing, range, and data checking.
 
 import logging
 import logging.config
+import os
 from datetime import datetime, timedelta
 
 import yaml
@@ -20,21 +21,23 @@ def daterange(start_date, end_date):
     Yields:
         str: Date string in MM-DD-YYYY format for each day in the range.
     """
-    logger.info(f"daterange called with start_date={start_date}, end_date={end_date}")
+    logger.info(
+        "daterange called with start_date=%s, end_date=%s", start_date, end_date
+    )
     start = datetime.strptime(start_date, "%m-%d-%Y")
     end = datetime.strptime(end_date, "%m-%d-%Y")
     delta = timedelta(days=1)
     count = 0
     while start <= end:
         date_str = start.strftime("%m-%d-%Y")
-        logger.debug(f"Yielding date: {date_str}")
+        logger.debug("Yielding date: %s", date_str)
         yield date_str
         start += delta
         count += 1
-    logger.info(f"daterange generated {count} dates")
+    logger.info("daterange generated %d dates", count)
 
 
-def check_existing_data(cleaned_data, args):
+def check_existing_data(cleaned_data):
     """
     Stub for checking if data already exists in InfluxDB and if value difference > 0.000001.
     Args:
@@ -45,7 +48,7 @@ def check_existing_data(cleaned_data, args):
     """
     logger.info("check_existing_data called (stub)")
     # TODO: implement existence and delta logic
-    logger.debug(f"Received {len(cleaned_data)} records for existence check")
+    logger.debug("Received %d records for existence check", len(cleaned_data))
     return False
 
 
@@ -71,7 +74,6 @@ def setup_run_logging_yaml(
     Returns:
         str: The path to the log file for this run.
     """
-    import os
 
     os.makedirs(log_dir, exist_ok=True)
     if mode == "live":

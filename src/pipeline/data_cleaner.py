@@ -26,8 +26,8 @@ def clean_and_parse_data(raw_data: str) -> list[dict]:
         records = ast.literal_eval(cleaned)
     except Exception as e:
         logger.exception("Failed to parse data into Python objects")
-        raise
-    logger.info(f"clean_and_parse_data produced {len(records)} records")
+        raise Exception(f"Failed to parse data into Python objects: {e}") from e
+    logger.info("clean_and_parse_data produced %d records", len(records))
     return records
 
 
@@ -41,10 +41,10 @@ def clean_data(raw_data, date_str: str, mode: bool) -> List[Dict[str, str]]:
     Returns:
         list[dict] or int: List of cleaned records, or 0 if parsing fails.
     """
-    logger.info(f"Processing and writing data for date={date_str}, mode={mode}")
+    logger.info("Processing and writing data for date=%s, mode=%s", date_str, mode)
     try:
         cleaned_list = clean_and_parse_data(raw_data)
-        logger.debug(f"Cleaned records count: {len(cleaned_list)}")
+        logger.debug("Cleaned records count: %d", len(cleaned_list))
     except Exception:
         logger.exception("Error in clean_and_parse_data")
         return 0

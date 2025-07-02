@@ -42,7 +42,7 @@ class TestApiClient(unittest.TestCase):
         mock_response.text = "<string></string>"
         mock_get.return_value = mock_response
         mock_et.return_value.text = None
-        with self.assertRaises(AssertionError):
+        with self.assertRaises(Exception):
             api_client.fetch_api_data("05-29-2025", 1, max_retries=1)
 
     @patch("src.pipeline.api_client.requests.get")

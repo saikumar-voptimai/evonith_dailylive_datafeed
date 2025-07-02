@@ -44,7 +44,7 @@ def fetch_api_data(date_str, range_param, max_retries=3, delay=10):
     Raises:
         Exception: If all retries fail or response is empty/invalid.
     """
-    logger.info(f"fetch_api_data(date={date_str}, range_param={range_param})")
+    logger.info("fetch_api_data(date=%s, range_param=%s)", date_str, range_param)
     month, day, year = [int(x) for x in date_str.split("-")]
     params = {
         "user": USER_DAILY,
@@ -54,24 +54,26 @@ def fetch_api_data(date_str, range_param, max_retries=3, delay=10):
         "year": year,
         "range": range_param,
     }
-    logger.debug(f"Request params: {params}")
+    logger.debug("Request params: %r", params)
     for attempt in range(1, max_retries + 1):
         try:
             response = requests.get(API_URL_DAILY, params=params, timeout=60)
-            logger.info(f"API response status code: {response.status_code}")
+            logger.info("API response status code: %s", response.status_code)
             response.raise_for_status()
             root = ElementTree.fromstring(response.text)
             assert root.text is not None, "API response is empty"
             logger.debug(
-                f"API response text: {root.text[:100]}..."
+                "API response text: %s...", root.text[:100]
             )  # Log first 100 chars for brevity
             return root.text
         except Exception as e:
-            logger.error(f"API fetch failed (attempt {attempt}): {e}")
+            logger.error("API fetch failed (attempt %d): %s", attempt, e)
             if attempt < max_retries:
                 sleep(delay)
             else:
-                raise
+                raise Exception(
+                    f"Failed to fetch data for {date_str} after {max_retries} attempts: {e}"
+                ) from e
 
 
 def fetch_api_data_live(max_retries=3, delay=5):
@@ -87,21 +89,23 @@ def fetch_api_data_live(max_retries=3, delay=5):
     """
     logger.info("fetch_api_data_live() called")
     params = {"user": USER_LIVE, "password": PASSWORD_LIVE}
-    logger.debug(f"Live request params: {params}")
+    logger.debug("Live request params: %r", params)
     for attempt in range(1, max_retries + 1):
         try:
             response = requests.get(API_URL_LIVE, params=params, timeout=60)
-            logger.info(f"API response status code: {response.status_code}")
+            logger.info("API response status code: %s", response.status_code)
             response.raise_for_status()
             # Extract the text inside the <string> tag
             root = ElementTree.fromstring(response.text)
             return root.text
         except Exception as e:
-            logger.error(f"API fetch failed (attempt {attempt}): {e}")
+            logger.error("API fetch failed (attempt %d): %s", attempt, e)
             if attempt < max_retries:
                 sleep(delay)
             else:
-                raise
+                raise Exception(
+                    f"Failed to fetch live data after {max_retries} attempts: {e}"
+                ) from e
 
 
 def process_datewise(
@@ -113,7 +117,8 @@ def process_datewise(
     variables_list=None,
 ):
     """
-    Orchestrates fetching, cleaning, processing, and writing of data for a specific date and range.
+    Orchestrates fetching, cleaning, processing, and writing of data for a
+    specific date and range.
     Args:
         dt (datetime.date): Date to process.
         range_param (int): Range parameter for API (e.g., 1 or 2).
@@ -132,14 +137,18 @@ def process_datewise(
         st = datetime.now()
         raw = fetch_api_data(dt_str, range_param)
         logger.info(
-            f"Fetched raw data for {dt_str} in {(datetime.now() - st).total_seconds()} seconds"
+            "Fetched raw data for %s in %.2f seconds",
+            dt_str,
+            (datetime.now() - st).total_seconds(),
         )
-        logger.debug(f"Fetched historical raw data for {dt}")
+        logger.debug("Fetched historical raw data for %s", dt)
         try:
             st = datetime.now()
             cleaned_list = clean_and_parse_data(raw)
             logger.info(
-                f"Cleaned raw data for {dt_str} in {(datetime.now() - st).total_seconds()} seconds"
+                "Cleaned raw data for %s in %.2f seconds",
+                dt_str,
+                (datetime.now() - st).total_seconds(),
             )
 
             st = datetime.now()
@@ -152,13 +161,16 @@ def process_datewise(
                 variables_list=variables_list,
             )
             logger.debug(
-                f"Processed and wrote {num_records} records for {dt} in {(datetime.now() - st).total_seconds()} seconds"
+                "Processed and wrote %d records for %s in %.2f seconds",
+                num_records,
+                dt,
+                (datetime.now() - st).total_seconds(),
             )
             success = True
         except Exception:
             logger.exception("process_and_write failed")
     except Exception:
-        logger.exception(f"fetch_api_data failed for {dt_str}")
+        logger.exception("fetch_api_data failed for %s", dt_str)
 
     if log_run_to_localdb:
         run_time = datetime.now().isoformat()

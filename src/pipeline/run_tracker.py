@@ -1,3 +1,10 @@
+"""
+Run tracking utilities for the Blast Furnace data pipeline.
+
+This module provides functions to initialize and update a local SQLite database
+or tracking pipeline runs, including run metadata and upsert logic.
+"""
+
 import json
 import logging
 import os
@@ -15,7 +22,7 @@ def init_db(db_path="db/run_metadata.db"):
         None. Creates DB and table if needed.
     """
     os.makedirs(os.path.dirname(db_path), exist_ok=True)
-    logger.info(f"Resolved absolute DB path: {os.path.abspath(db_path)}")
+    logger.info("Resolved absolute DB path: %s", os.path.abspath(db_path))
     conn = sqlite3.connect(db_path)
     cur = conn.cursor()
     cur.execute(
@@ -38,9 +45,9 @@ def init_db(db_path="db/run_metadata.db"):
     )
     conn.commit()
     cur.execute("SELECT name FROM sqlite_master WHERE type='table';")
-    logger.info(f"Tables in DB: {cur.fetchall()}")
+    logger.info("Tables in DB: %r", cur.fetchall())
     conn.close()
-    logger.info(f"Initialized database at {db_path} with runs table.")
+    logger.info("Initialized database at %s with runs table.", db_path)
 
 
 def log_run(
@@ -73,7 +80,7 @@ def log_run(
     Returns:
         None. Inserts or updates the run record in the DB.
     """
-    logger.info(f"Resolved absolute DB path: {os.path.abspath(db_path)}")
+    logger.info("Resolved absolute DB path: %s", os.path.abspath(db_path))
     conn = sqlite3.connect(db_path)
     cur = conn.cursor()
     cur.execute(

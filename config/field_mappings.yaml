@@ -138,8 +138,8 @@ PROCESS PARAMS MAP:
   BF2_BODY_RAFT: body_raft
   BF2 TUYERE VELOCITY: tuyere_velocity
   BF2 charges per hour: charges_per_hour
-  BF2 Coal rate actual value (Kg/THM): coal_rate_actual
-  BF2 Coal rate Set value (Kg/THM): coal_rate_set
+  BF2 Coal rate actual value (Kg/THM): coal_rate_actual_value
+  BF2 Coal rate Set value (Kg/THM): coal_rate_set_value
   BF2 Coke rate (Kg/THM): coke_rate
   BF2 Daily Steam injection (Kg/day): daily_steam_injection
   BF2 Fuel rate (Kg/THM): fuel_rate

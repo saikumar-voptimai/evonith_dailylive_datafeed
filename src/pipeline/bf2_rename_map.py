@@ -1,3 +1,10 @@
+"""
+Field mapping and InfluxDB line protocol utilities for Blast Furnace data pipeline.
+
+This module loads field mappings from YAML, provides functions to map raw API variable names to InfluxDB measurements/fields,
+converts values to numeric types, and builds InfluxDB line protocol strings for a given timestamp's data.
+"""
+
 import logging
 
 import yaml
@@ -68,8 +75,8 @@ def build_points(api_dict: dict, ts) -> str:
     Returns:
         str: InfluxDB line protocol string(s) for all valid variables in api_dict.
     """
-    logger.debug(f"Building points for timestamp: {ts}")
-    logger.debug(f"Total {len(api_dict)} variables observed.")
+    logger.debug("Building points for timestamp: %r", ts)
+    logger.debug("Total %d variables observed.", len(api_dict))
 
     atleast_once_logged = {}
     measurement_lines = {}
@@ -99,6 +106,10 @@ def build_points(api_dict: dict, ts) -> str:
     for measurement_line in measurement_lines.values():
         line_input += measurement_line + f"\n"
     logger.debug(
-        f"Processeed {len(measurement_lines)} measurements, wrote_str={wrote_str}, wrote_float={wrote_float}. Total vars: {len(api_dict)}"
+        "Processeed %d measurements, wrote_str=%d, wrote_float=%d. Total vars: %d",
+        len(measurement_lines),
+        wrote_str,
+        wrote_float,
+        len(api_dict),
     )
     return line_input

@@ -12,7 +12,6 @@ from typing import Dict, List, Tuple
 import pytz
 import yaml
 from influxdb_client_3 import (
-    SYNCHRONOUS,
     InfluxDBClient3,
     InfluxDBError,
     WriteOptions,
@@ -52,14 +51,19 @@ def write_points_to_txt(
     os.makedirs(out_dir, exist_ok=True)
 
     logger.debug(
-        f"Starting write_points_to_txt: mode={mode}, date_str={date_str_file}, time_str={time_str} range={range}, filename={filename}"
+        "Starting write_points_to_txt: mode=%s, date_str=%s, time_str=%s range=%s, filename=%s",
+        mode,
+        date_str_file,
+        time_str,
+        range,
+        filename,
     )
     if os.path.exists(filename) and mode != "live":
-        logger.debug(f"File {filename} exists, appending data.")
+        logger.debug("File %s exists, appending data.", filename)
         with open(filename, "a", encoding="utf-8") as f:
             f.write(line_input_per_rec)
     else:
-        logger.info(f"Creating new file {filename}")
+        logger.info("Creating new file %s", filename)
         with open(filename, "w", encoding="utf-8") as f:
             f.write(line_input_per_rec)
 
@@ -77,13 +81,16 @@ def write_to_influxdb(filename, args, batch_size=1000):
         Exception: If connection or write fails.
     """
     logger.info(
-        f"write_to_influxdb called with filename={filename}, args={args}, batch_size={batch_size}"
+        "write_to_influxdb called with filename=%s, args=%r, batch_size=%d",
+        filename,
+        args,
+        batch_size,
     )
 
     try:
         host = DB_CONFIG["INFLUXDB"]["HOST"]
         org = DB_CONFIG["INFLUXDB"]["ORG"]
-        logger.info(f"Connecting to InfluxDB at {host}, org={org}")
+        logger.info("Connecting to InfluxDB at %s, org=%s", host, org)
         write_options = WriteOptions(
             batch_size=1000,
             flush_interval=10_000,
@@ -94,14 +101,14 @@ def write_to_influxdb(filename, args, batch_size=1000):
             exponential_base=2,
         )
 
-        def success(self, data: str):
+        def success():
             status = "Success writing batch: data: {data}"
             assert status.startswith("Success"), f"Expected {status} to be success"
 
-        def error(self, data: str, exception: InfluxDBError):
+        def error(self, exception: InfluxDBError):
             print(f"Failed writing batch: config: {self}, due: {exception}")
 
-        def retry(self, data: str, exception: InfluxDBError):
+        def retry(self, exception: InfluxDBError):
             print(f"Failed retry writing batch: config: {self}, retry: {exception}")
 
         wco = write_client_options(
@@ -113,7 +120,7 @@ def write_to_influxdb(filename, args, batch_size=1000):
 
         try:
             bucket = DB_CONFIG["INFLUXDB"]["BUCKET"]
-            logger.info(f"Writing to bucket: {bucket}")
+            logger.info("Writing to bucket: %s", bucket)
             batch, wrote = [], 0
             with open(filename, "r") as file:
                 for line in file:
@@ -133,7 +140,9 @@ def write_to_influxdb(filename, args, batch_size=1000):
                             database=bucket, record=points, write_precision="s"
                         )
                         logger.info(
-                            f"Wrote batch of {len(batch)} lines to InfluxDB. Total written: {wrote}."
+                            "Wrote batch of %d lines to InfluxDB. Total written: %d.",
+                            len(batch),
+                            wrote,
                         )
                         batch = []
                         wait_time = DB_CONFIG.get("WRITE_DELAY", 5)
@@ -158,13 +167,13 @@ def write_to_influxdb(filename, args, batch_size=1000):
                     # time.sleep(wait_time)
                     client.close()
                     time.sleep(wait_time)
-                    logger.info(f"Wrote final batch of {len(batch)} lines to InfluxDB")
-            logger.info(f"Finished writing all lines from {filename} to InfluxDB")
+                    logger.info("Wrote final batch of %d lines to InfluxDB", len(batch))
+            logger.info("Finished writing all lines from %s to InfluxDB", filename)
         except Exception:
             logger.exception("Failed to write points to InfluxDB")
             raise
     except Exception as e:
-        logger.error(f"Error connecting to InfluxDB: {e}")
+        logger.error("Error connecting to InfluxDB: %s", e)
         raise
 
 
@@ -214,10 +223,10 @@ def process_and_write(
                 record["Timelogged"] = dt_utc
             except Exception as e:
                 logger.warning(
-                    f"Failed to parse Timelogged: {record.get('Timelogged')} - {e}"
+                    "Failed to parse Timelogged: %s - %s", record.get("Timelogged"), e
                 )
         ts = record.get("Timelogged")
-        logger.debug(f"Building points for timestamp={ts}")
+        logger.debug("Building points for timestamp=%s", ts)
         line_input = build_points(record, ts)
         write_points_to_txt(
             line_input, date_str_file, range, mode=mode, filename=write_filename
@@ -228,7 +237,8 @@ def process_and_write(
             st = datetime.now()
             write_to_influxdb(write_filename, args, batch_size=5000)
             logger.info(
-                f"Write to influxdb took: {(datetime.now() - st).total_seconds()} seconds"
+                "Write to influxdb took: %s seconds",
+                (datetime.now() - st).total_seconds(),
             )
         # TODO: Implement logic to check if point already exists in DB
         # and if value difference > 0.000001
@@ -237,9 +247,9 @@ def process_and_write(
         points_file_final = (
             os.path.join("output", f"date_{date_str_file}_Range{range}.txt")
             if mode == "daily"
-            else os.path.join("output", f"live_{date_str_file}_{time_str}.txt")
+            else os.path.join("output", f"live_{date_str_file}_{time_str_file}.txt")
         )
-        logger.info(f"Renaming file {write_filename} to {points_file_final}")
+        logger.info("Renaming file %s to %s", write_filename, points_file_final)
         os.rename(write_filename, points_file_final)
         gzipped_path = points_file_final + ".gz"
         with (
@@ -248,7 +258,7 @@ def process_and_write(
         ):
             f_out.writelines(f_in)
         os.remove(points_file_final)
-        logger.info(f"Gzipped points file to {gzipped_path}")
+        logger.info("Gzipped points file to %s", gzipped_path)
         points_file_final = gzipped_path
     time_str = None
     if mode == "live":
@@ -266,7 +276,7 @@ def should_write_point(point, args):
         bool: True if the point should be written (default), False otherwise.
     """
     logger.info(
-        f"should_write_point called for point={point}, override={args.override}"
+        "should_write_point called for point=%r, override=%r", point, args.override
     )
     # TODO: Implement logic to check if point already exists in DB
     return True

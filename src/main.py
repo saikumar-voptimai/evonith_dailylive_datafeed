@@ -1,3 +1,12 @@
+"""
+Main entry point for the Blast Furnace Data Pipeline.
+
+This module parses command-line arguments, sets up logging, and orchestrates
+the fetching, cleaning, processing, and writing of blast furnace data in both
+live and daily/range modes. It supports writing to InfluxDB, file retention,
+debugging, and selective variable processing via a variable file.
+"""
+
 import argparse
 import datetime
 import logging.config
@@ -17,17 +26,27 @@ from src.pipeline.run_tracker import init_db, log_run
 from src.pipeline.utils import setup_run_logging_yaml
 
 
-def setup_logging(default_path="config/logging.yaml"):
-    with open(default_path, "r") as f:
-        config = yaml.safe_load(f)
+def setup_logging(default_path: str = "config/logging.yaml"):
+    """
+    Setup logging configuration from a YAML file.
+    Args:
+        default_path (str): Path to the logging configuration YAML file.
+    """
+    with open(default_path, "r") as logfile:
+        config = yaml.safe_load(logfile)
     logging.config.dictConfig(config)
 
 
-with open("config/config.yaml", "r", encoding="utf-8") as f:
-    CONFIG = yaml.safe_load(f) or {}
+with open("config/config.yaml", "r", encoding="utf-8") as conffile:
+    CONFIG = yaml.safe_load(conffile) or {}
 
 
 def main():
+    """
+    Main function to parse command-line arguments and run the pipeline.
+    It initializes the database, sets up logging, and processes data in either
+    live or daily/range mode based on the provided arguments.
+    """
     logger = logging.getLogger("pipeline")
     logger.debug("Initializing argument parser")
     parser = argparse.ArgumentParser(description="Blast Furnace Data Pipeline")
@@ -96,7 +115,7 @@ def main():
     args = parser.parse_args()
 
     init_db()
-    logger.info(f"Parsed CLI args: {args}")
+    logger.info("Parsed CLI args: %s", args)
 
     load_dotenv()
     log_config_file = (
@@ -106,7 +125,9 @@ def main():
 
     if (args.startdate == args.enddate) and args.startdate:
         logger.info(
-            f"Start date {args.startdate} is the same as end date {args.enddate}. Triggering daily mode."
+            "Start date %s is the same as end date %s. Triggering daily mode.",
+            args.startdate,
+            args.enddate,
         )
         args.date = args.startdate
         args.startdate = None
@@ -126,16 +147,17 @@ def main():
         logger.info("Running in live mode")
         st = datetime.datetime.now()
         logger.debug(
-            f"Live mode - Run for timestamp UTC at {datetime.datetime.now(datetime.timezone.utc)}"
+            "Live mode - Run for timestamp UTC at %s",
+            datetime.datetime.now(datetime.timezone.utc),
         )
         try:
             raw = fetch_api_data_live()
-            logger.debug(f"Fetched live raw data size: {len(raw)}")
+            logger.debug("Fetched live raw data size: %d", len(raw))
         except Exception as e:
-            logger.exception(f"fetch_api_data_live() failed - {e}")
+            logger.exception("fetch_api_data_live() failed - %s", e)
             sys.exit(1)
         cleaned_list = clean_data(raw, date_str=date_str_file, mode="live")
-        num_records, points_file_path, time_str = process_and_write(
+        num_records, points_file_path, time_str_file = process_and_write(
             cleaned_list,
             date_str_file=date_str_file,
             time_str_file=time_str_file,
@@ -145,24 +167,28 @@ def main():
         )
         et = datetime.datetime.now()
         run_time = datetime.datetime.now(datetime.timezone.utc).isoformat()
-        log_run(
-            run_time,
-            date_str_file,
-            str(args.range or 1),
-            args.mode,
-            vars(args),
-            pid,
-            True,
-            num_records,
-            log_path,
-            points_file_path,
-        )
+        if args.log_run:
+            log_run(
+                run_time,
+                date_str_file,
+                time_str_file,
+                str(args.range or 1),
+                args.mode,
+                vars(args),
+                pid,
+                True,
+                num_records,
+                log_path,
+                points_file_path,
+            )
         excess_time = (
             datetime.timedelta(seconds=float(CONFIG["WAIT"])) - (et - st)
         ).total_seconds()
         if excess_time < 0:
             logger.warning(
-                f'API call & processing took longer than {CONFIG["WAIT"]}, by {excess_time:.2f}s'
+                "API call & processing took longer than %s, by %.2fs",
+                CONFIG["WAIT"],
+                excess_time,
             )
         else:
             logger.warning("API call took longer than expected, skipping wait time.")
@@ -170,9 +196,11 @@ def main():
         start_date = datetime.datetime.strptime(args.startdate, "%m-%d-%Y")
         end_date = datetime.datetime.strptime(args.enddate, "%m-%d-%Y")
         log_run_to_localdb = args.log_run
-        logger.debug(f"Range mode - Processing date range: {start_date} to {end_date}")
+        logger.debug(
+            "Range mode - Processing date range: %s to %s", start_date, end_date
+        )
         if start_date > end_date:
-            logger.error(f"Start date {start_date} is after end date {end_date}")
+            logger.error("Start date %s is after end date %s", start_date, end_date)
             sys.exit(1)
         dates_list = [
             start_date + datetime.timedelta(days=i)
@@ -180,18 +208,20 @@ def main():
         ]
         log_run_to_localdb = (
             args.log_run
-        )  # True if args.log_run else False. Also False is date is today.
+        )  # True if args.log_run else False. Also False if date is today.
         # Read variables_list from file if provided
         variables_list = None
         if hasattr(args, "variable_file") and args.variable_file:
             with open(args.variable_file, "r") as vf:
                 variables_list = [line.strip() for line in vf if line.strip()]
         for dt in dates_list:
-            logger.debug(f"Processing date {dt}")
+            logger.debug("Processing date %s", dt)
             if dt == datetime.datetime.now(datetime.timezone.utc).date():
                 log_run_to_localdb = False
                 logger.info(
-                    f"Skip logging the run details for {dt} as yet data needs to be loaded for today's date."
+                    "Skip logging the run details for %s as yet data needs to be \
+                        loaded for today's date.",
+                    dt,
                 )
             for i in range(1, 3):
                 log_path = setup_run_logging_yaml(
@@ -214,14 +244,16 @@ def main():
                 datetime.datetime.now(datetime.timezone.utc)
                 - datetime.timedelta(days=1)
             ).strftime("%m-%d-%Y")
-        logger.debug(f"Daily mode - Processing date: {args.date}")
+        logger.debug("Daily mode - Processing date: %s", args.date)
         log_run_to_localdb = args.log_run
         if args.date:
             dt = datetime.datetime.strptime(args.date, "%m-%d-%Y")
             if dt == datetime.datetime.now(datetime.timezone.utc).date():
                 log_run_to_localdb = False
                 logger.info(
-                    f"Skip logging the run details for {dt} as yet data needs to be loaded for today's date."
+                    "Skip logging the run details for %s as yet data needs to be \
+                        loaded for today's date.",
+                    dt,
                 )
             for i in range(1, 3):
                 log_path = setup_run_logging_yaml(
