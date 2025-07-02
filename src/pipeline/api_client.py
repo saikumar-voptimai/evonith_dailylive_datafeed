@@ -72,7 +72,6 @@ def fetch_api_data(date_str, range_param, max_retries=3, delay=10):
                 raise Exception(
                     f"Failed to fetch data for {date_str} after {max_retries} attempts: {e}"
                 ) from e
-            return None
 
 
 def fetch_api_data_live(max_retries=3, delay=5):
@@ -105,7 +104,6 @@ def fetch_api_data_live(max_retries=3, delay=5):
                 raise Exception(
                     f"Failed to fetch live data after {max_retries} attempts: {e}"
                 ) from e
-            return None
 
 
 def process_datewise(
