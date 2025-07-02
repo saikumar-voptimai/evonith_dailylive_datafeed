@@ -7,11 +7,13 @@ on:
 
 jobs:
   test-build-deploy:
+    environment: Kalpvoptpi1p Env
     runs-on: ubuntu-latest
     env:
       PI_HOST: ${{ secrets.PI_HOST }}
       PI_USER: ${{ secrets.PI_USER }}
       PI_SSH_KEY: ${{ secrets.PI_SSH_KEY }}
+      PI_PORT: 2222
       PROJECT_DIR: /home/voptimaise/evonith/dataloading/onlinedata
     steps:
       - name: Checkout code
@@ -24,6 +26,9 @@ jobs:
 
       - name: Install uv
         run: pip install uv
+
+      - name: Create virtual environment
+        run: uv venv
 
       - name: Run unittests with coverage
         run: |
@@ -46,14 +51,11 @@ jobs:
           VERSION="$YY.$WEEK.$PATCH"
           echo "version=$VERSION" >> $GITHUB_OUTPUT
 
-      - name: Compile lockfile
-        run: uv pip compile --all-extras --output-file=uv.lock
-
       - name: Archive project
         run: |
           mkdir -p dist
-          tar czf dist/bf_eml_datafeed-${{ steps.version.outputs.version }}.tar.gz . \
-            --exclude=dist --exclude=.git --exclude=test_logs
+          tar --exclude=dist --exclude=.git --exclude=test_logs \
+              -czf dist/bf_eml_datafeed-${{ steps.version.outputs.version }}.tar.gz .
 
       - name: Copy to Raspberry Pi
         uses: appleboy/scp-action@v0.1.7
@@ -61,6 +63,8 @@ jobs:
           host: ${{ env.PI_HOST }}
           username: ${{ env.PI_USER }}
           key: ${{ env.PI_SSH_KEY }}
+          port: 2222
+          request_pty: true
           source: "dist/bf_eml_datafeed-${{ steps.version.outputs.version }}.tar.gz"
           target: "${{ env.PROJECT_DIR }}/"
 
@@ -70,11 +74,16 @@ jobs:
           host: ${{ env.PI_HOST }}
           username: ${{ env.PI_USER }}
           key: ${{ env.PI_SSH_KEY }}
+          port: 2222
+          request_pty: true
           script: |
             set -e
             cd $PROJECT_DIR
             ls -l $PROJECT_DIR  # Debug: list files before extracting
             VERSION="${{ steps.version.outputs.version }}"
+            ARCHIVE="bf_eml_datafeed-$VERSION.tar.gz"
+            EXTRACTED_DIR="$PROJECT_DIR/bf_eml_datafeed-$VERSION"
+            cd $PROJECT_DIR
             ARCHIVE="bf_eml_datafeed-$VERSION.tar.gz"
             EXTRACTED_DIR="$PROJECT_DIR/bf_eml_datafeed-$VERSION"
 
