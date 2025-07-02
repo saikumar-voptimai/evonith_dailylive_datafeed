@@ -73,6 +73,7 @@ jobs:
           script: |
             set -e
             cd $PROJECT_DIR
+            ls -l $PROJECT_DIR  # Debug: list files before extracting
             VERSION="${{ steps.version.outputs.version }}"
             ARCHIVE="bf_eml_datafeed-$VERSION.tar.gz"
             EXTRACTED_DIR="$PROJECT_DIR/bf_eml_datafeed-$VERSION"
