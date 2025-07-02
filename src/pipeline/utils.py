@@ -21,7 +21,9 @@ def daterange(start_date, end_date):
     Yields:
         str: Date string in MM-DD-YYYY format for each day in the range.
     """
-    logger.info("daterange called with start_date=%s, end_date=%s", start_date, end_date)
+    logger.info(
+        "daterange called with start_date=%s, end_date=%s", start_date, end_date
+    )
     start = datetime.strptime(start_date, "%m-%d-%Y")
     end = datetime.strptime(end_date, "%m-%d-%Y")
     delta = timedelta(days=1)

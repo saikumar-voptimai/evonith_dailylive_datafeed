@@ -52,7 +52,11 @@ def write_points_to_txt(
 
     logger.debug(
         "Starting write_points_to_txt: mode=%s, date_str=%s, time_str=%s range=%s, filename=%s",
-        mode, date_str_file, time_str, range, filename
+        mode,
+        date_str_file,
+        time_str,
+        range,
+        filename,
     )
     if os.path.exists(filename) and mode != "live":
         logger.debug("File %s exists, appending data.", filename)
@@ -78,7 +82,9 @@ def write_to_influxdb(filename, args, batch_size=1000):
     """
     logger.info(
         "write_to_influxdb called with filename=%s, args=%r, batch_size=%d",
-        filename, args, batch_size
+        filename,
+        args,
+        batch_size,
     )
 
     try:
@@ -135,7 +141,8 @@ def write_to_influxdb(filename, args, batch_size=1000):
                         )
                         logger.info(
                             "Wrote batch of %d lines to InfluxDB. Total written: %d.",
-                            len(batch), wrote
+                            len(batch),
+                            wrote,
                         )
                         batch = []
                         wait_time = DB_CONFIG.get("WRITE_DELAY", 5)
@@ -216,8 +223,7 @@ def process_and_write(
                 record["Timelogged"] = dt_utc
             except Exception as e:
                 logger.warning(
-                    "Failed to parse Timelogged: %s - %s",
-                    record.get("Timelogged"), e
+                    "Failed to parse Timelogged: %s - %s", record.get("Timelogged"), e
                 )
         ts = record.get("Timelogged")
         logger.debug("Building points for timestamp=%s", ts)
@@ -232,7 +238,7 @@ def process_and_write(
             write_to_influxdb(write_filename, args, batch_size=5000)
             logger.info(
                 "Write to influxdb took: %s seconds",
-                (datetime.now() - st).total_seconds()
+                (datetime.now() - st).total_seconds(),
             )
         # TODO: Implement logic to check if point already exists in DB
         # and if value difference > 0.000001
@@ -270,8 +276,7 @@ def should_write_point(point, args):
         bool: True if the point should be written (default), False otherwise.
     """
     logger.info(
-        "should_write_point called for point=%r, override=%r",
-        point, args.override
+        "should_write_point called for point=%r, override=%r", point, args.override
     )
     # TODO: Implement logic to check if point already exists in DB
     return True

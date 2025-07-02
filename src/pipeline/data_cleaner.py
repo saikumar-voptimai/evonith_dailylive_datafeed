@@ -26,9 +26,7 @@ def clean_and_parse_data(raw_data: str) -> list[dict]:
         records = ast.literal_eval(cleaned)
     except Exception as e:
         logger.exception("Failed to parse data into Python objects")
-        raise Exception(
-            f"Failed to parse data into Python objects: {e}"
-        ) from e
+        raise Exception(f"Failed to parse data into Python objects: {e}") from e
     logger.info("clean_and_parse_data produced %d records", len(records))
     return records
 

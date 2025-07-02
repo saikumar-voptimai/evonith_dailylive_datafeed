@@ -62,7 +62,9 @@ def fetch_api_data(date_str, range_param, max_retries=3, delay=10):
             response.raise_for_status()
             root = ElementTree.fromstring(response.text)
             assert root.text is not None, "API response is empty"
-            logger.debug("API response text: %s...", root.text[:100])  # Log first 100 chars for brevity
+            logger.debug(
+                "API response text: %s...", root.text[:100]
+            )  # Log first 100 chars for brevity
             return root.text
         except Exception as e:
             logger.error("API fetch failed (attempt %d): %s", attempt, e)
@@ -115,7 +117,7 @@ def process_datewise(
     variables_list=None,
 ):
     """
-    Orchestrates fetching, cleaning, processing, and writing of data for a 
+    Orchestrates fetching, cleaning, processing, and writing of data for a
     specific date and range.
     Args:
         dt (datetime.date): Date to process.

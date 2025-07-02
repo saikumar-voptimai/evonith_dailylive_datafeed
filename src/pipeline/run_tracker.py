@@ -1,7 +1,7 @@
 """
 Run tracking utilities for the Blast Furnace data pipeline.
 
-This module provides functions to initialize and update a local SQLite database 
+This module provides functions to initialize and update a local SQLite database
 or tracking pipeline runs, including run metadata and upsert logic.
 """
 

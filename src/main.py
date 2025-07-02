@@ -26,11 +26,11 @@ from src.pipeline.run_tracker import init_db, log_run
 from src.pipeline.utils import setup_run_logging_yaml
 
 
-def setup_logging(default_path: str="config/logging.yaml"):
+def setup_logging(default_path: str = "config/logging.yaml"):
     """
     Setup logging configuration from a YAML file.
     Args:
-        default_path (str): Path to the logging configuration YAML file.    
+        default_path (str): Path to the logging configuration YAML file.
     """
     with open(default_path, "r") as logfile:
         config = yaml.safe_load(logfile)
@@ -126,7 +126,8 @@ def main():
     if (args.startdate == args.enddate) and args.startdate:
         logger.info(
             "Start date %s is the same as end date %s. Triggering daily mode.",
-            args.startdate, args.enddate
+            args.startdate,
+            args.enddate,
         )
         args.date = args.startdate
         args.startdate = None
@@ -185,8 +186,9 @@ def main():
         ).total_seconds()
         if excess_time < 0:
             logger.warning(
-                'API call & processing took longer than %s, by %.2fs',
-                CONFIG["WAIT"], excess_time
+                "API call & processing took longer than %s, by %.2fs",
+                CONFIG["WAIT"],
+                excess_time,
             )
         else:
             logger.warning("API call took longer than expected, skipping wait time.")
@@ -194,7 +196,9 @@ def main():
         start_date = datetime.datetime.strptime(args.startdate, "%m-%d-%Y")
         end_date = datetime.datetime.strptime(args.enddate, "%m-%d-%Y")
         log_run_to_localdb = args.log_run
-        logger.debug("Range mode - Processing date range: %s to %s", start_date, end_date)
+        logger.debug(
+            "Range mode - Processing date range: %s to %s", start_date, end_date
+        )
         if start_date > end_date:
             logger.error("Start date %s is after end date %s", start_date, end_date)
             sys.exit(1)
@@ -217,7 +221,7 @@ def main():
                 logger.info(
                     "Skip logging the run details for %s as yet data needs to be \
                         loaded for today's date.",
-                    dt
+                    dt,
                 )
             for i in range(1, 3):
                 log_path = setup_run_logging_yaml(
@@ -249,7 +253,7 @@ def main():
                 logger.info(
                     "Skip logging the run details for %s as yet data needs to be \
                         loaded for today's date.",
-                    dt
+                    dt,
                 )
             for i in range(1, 3):
                 log_path = setup_run_logging_yaml(
