@@ -1,6 +1,6 @@
 [project]
 name = "dailydatafeed"
-version = "0.1.0"
+version = "25.17.1"
 description = ""
 authors = [{ name = "Saikumar Yeddula", email = "saikumar.yeddula@v-optimai.com" }]
 requires-python = "~=3.9"

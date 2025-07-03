@@ -103,7 +103,7 @@ jobs:
 
             python3.12 -m venv "$EXTRACTED_DIR/.venv"
             "$EXTRACTED_DIR/.venv/bin/pip" install uv
-            "$EXTRACTED_DIR/.venv/bin/uv" pip install
+            "$EXTRACTED_DIR/.venv/bin/uv" pip install --no-deps -r uv.lock
 
             ln -sfn "$EXTRACTED_DIR" "$PROJECT_DIR/current"
             echo "Symlink updated to bf_eml_datafeed-$VERSION"
