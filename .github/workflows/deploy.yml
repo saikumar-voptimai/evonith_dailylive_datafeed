@@ -55,7 +55,7 @@ jobs:
         run: |
           mkdir -p dist
           tar --exclude=dist --exclude=.git --exclude=test_logs \
-              -czf dist/bf_eml_datafeed-${{ steps.version.outputs.version }}.tar.gz .
+              -czf bf_eml_datafeed-${{ steps.version.outputs.version }}.tar.gz .
 
       - name: Copy to Raspberry Pi
         uses: appleboy/scp-action@v0.1.7
@@ -65,8 +65,8 @@ jobs:
           key: ${{ env.PI_SSH_KEY }}
           port: 2222
           request_pty: true
-          source: "dist/bf_eml_datafeed-${{ steps.version.outputs.version }}.tar.gz"
-          target: "${{ env.PROJECT_DIR }}/"
+          source: "bf_eml_datafeed-${{ steps.version.outputs.version }}.tar.gz"
+          target: "${{ env.PROJECT_DIR }}/bf_eml_datafeed-${{ steps.version.outputs.version }}.tar.gz"
 
       - name: Deploy and update symlink
         uses: appleboy/ssh-action@v1.0.3
