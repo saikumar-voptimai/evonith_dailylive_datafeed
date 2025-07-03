@@ -68,6 +68,18 @@ jobs:
           request_pty: true
           source: "dist/bf_eml_datafeed-${{ steps.version.outputs.version }}.tar.gz"
           target: "${{ env.PROJECT_DIR }}/bf_eml_datafeed-${{ steps.version.outputs.version }}.tar.gz"
+          tar_exec: ""
+      
+      - name: Confirm archive is a file
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ env.PI_HOST }}
+          username: ${{ env.PI_USER }}
+          key: ${{ env.PI_SSH_KEY }}
+          port: 2222
+          script: |
+            file "${{ env.PROJECT_DIR }}/bf_eml_datafeed-${{ steps.version.outputs.version }}.tar.gz"
+            ls -l "${{ env.PROJECT_DIR }}"
 
       - name: Deploy and update symlink
         uses: appleboy/ssh-action@v1.0.3
