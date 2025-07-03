@@ -69,6 +69,8 @@ jobs:
           source: "dist/bf_eml_datafeed-${{ steps.version.outputs.version }}.tar.gz"
           target: "${{ env.PROJECT_DIR }}/bf_eml_datafeed-${{ steps.version.outputs.version }}.tar.gz"
           tar_exec: ""
+          rm: false                     # do NOT remove source
+          strip_components: 0  
       
       - name: Confirm archive is a file
         uses: appleboy/ssh-action@v1.0.3
