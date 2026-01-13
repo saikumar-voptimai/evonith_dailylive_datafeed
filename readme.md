@@ -79,7 +79,7 @@ This Python-based CLI tool ingests blast-furnace process variables into InfluxDB
 
 ---
 
-### Outstanding TODOs
+### Outstanding TODOs - This is being done as separate batch job
 
 - **influx_writer.py**:  
   Implement existence check to avoid duplicate writes.
