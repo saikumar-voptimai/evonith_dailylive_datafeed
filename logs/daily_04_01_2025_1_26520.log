@@ -1,2 +1,0 @@
-[INFO   | api_client           | L41] 2025-05-25T19:12:55+0530: fetch_api_data(date=04-01-2025, range_param=1) | api_client.py
-[INFO   | api_client           | L55] 2025-05-25T19:14:06+0530: API response status code: 200 | api_client.py

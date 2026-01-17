@@ -65,10 +65,8 @@ jobs:
           username: ${{ env.PI_USER }}
           key: ${{ env.PI_SSH_KEY }}
           port: 2222
-          request_pty: true
           source: "dist/bf_eml_datafeed-${{ steps.version.outputs.version }}.tar.gz"
           target: "${{ env.PROJECT_DIR }}"           # do NOT remove source
-          strip_components: 1  
       
       - name: Confirm archive is a file
         uses: appleboy/ssh-action@v1.0.3
@@ -93,10 +91,12 @@ jobs:
             set -e
             PROJECT_DIR="/home/voptimaise/Desktop/evonith/dataloading/onlinedata"
             cd $PROJECT_DIR
-            ls -l $PROJECT_DIR
+
             VERSION="${{ steps.version.outputs.version }}"
-            ARCHIVE="bf_eml_datafeed-$VERSION.tar.gz"
+            ARCHIVE="dist/bf_eml_datafeed-$VERSION.tar.gz"
             EXTRACTED_DIR="$PROJECT_DIR/bf_eml_datafeed-$VERSION"
+
+            ls -l $PROJECT_DIR
 
             mkdir -p "$EXTRACTED_DIR"
             tar xzf "$ARCHIVE" -C "$EXTRACTED_DIR" --strip-components=1
