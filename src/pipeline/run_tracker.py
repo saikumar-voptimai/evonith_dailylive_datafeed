@@ -9,6 +9,7 @@ import json
 import logging
 import os
 import sqlite3
+from typing import Optional
 
 logger = logging.getLogger("pipeline")
 
@@ -59,7 +60,7 @@ def log_run(
     process_id: int,
     success: int,
     num_records: int,
-    log_path: str,
+    log_path: Optional[str],
     points_file_path: str,
     db_path: str = "db/run_metadata.db",
 ) -> None:

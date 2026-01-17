@@ -32,8 +32,9 @@ class TestInfluxWriter(unittest.TestCase):
         },
     )
     @patch("src.pipeline.influx_writer.InfluxDBClient3")
+    @patch("src.pipeline.influx_writer.time.sleep")
     @patch("builtins.open", new_callable=mock_open, read_data="line1\n")
-    def test_write_to_influxdb(self, mock_file, mock_client, mock_getenv):
+    def test_write_to_influxdb(self, mock_file, mock_sleep, mock_client, mock_getenv):
         """Test write_to_influxdb writes data to InfluxDB using mocked client and file."""
         args = MagicMock()
         influx_writer.write_to_influxdb("testfile.txt", args, batch_size=1)

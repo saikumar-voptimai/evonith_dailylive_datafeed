@@ -58,7 +58,7 @@ def write_points_to_txt(
         range,
         filename,
     )
-    if os.path.exists(filename) and mode != "live":
+    if os.path.exists(filename):
         logger.debug("File %s exists, appending data.", filename)
         with open(filename, "a", encoding="utf-8") as f:
             f.write(line_input_per_rec)
@@ -185,7 +185,6 @@ def process_and_write(
     mode: str = "live",
     args: Dict = None,
     ouput_dir="output",
-    log_path: str = None,
     variables_list=None,
 ) -> Tuple[int, str, str]:
     """
@@ -205,6 +204,7 @@ def process_and_write(
     """
     record_count = len(cleaned_list)
     write_filename = os.path.join(ouput_dir, f"tmp_{os.getpid()}.txt")
+    dt_utc = None
     for record in cleaned_list:
         # Filter record if variables_list is provided
         if variables_list is not None:
@@ -229,7 +229,13 @@ def process_and_write(
         logger.debug("Building points for timestamp=%s", ts)
         line_input = build_points(record, ts)
         write_points_to_txt(
-            line_input, date_str_file, range, mode=mode, filename=write_filename
+            line_input_per_rec=line_input, 
+            date_str_file=date_str_file,
+            time_str=time_str_file,
+            range=str(range), 
+            mode=mode,
+            out_dir=ouput_dir, 
+            filename=write_filename
         )
 
     if args and args.db_write:
@@ -260,6 +266,14 @@ def process_and_write(
         os.remove(points_file_final)
         logger.info("Gzipped points file to %s", gzipped_path)
         points_file_final = gzipped_path
+    else:
+        try:
+            if os.path.exists(write_filename):
+                os.remove(write_filename)
+                logger.info("Removed temporary file %s", write_filename)
+        except Exception as e:
+            logger.warning("Failed to remove temporary file %s: %s", write_filename, e)
+    
     time_str = None
     if mode == "live":
         time_str = dt_utc.strftime(DB_CONFIG["TIME_FORMAT_FILENAME"])

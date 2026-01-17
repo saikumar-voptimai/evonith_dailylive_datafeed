@@ -6,6 +6,7 @@ import logging
 import os
 from datetime import datetime
 from time import sleep
+from typing import Optional
 from xml.etree import ElementTree
 
 import requests
@@ -113,7 +114,7 @@ def process_datewise(
     range_param: int,
     log_run_to_localdb: bool,
     args=None,
-    log_path: str = None,
+    log_path: Optional[str] = None,
     variables_list=None,
 ):
     """

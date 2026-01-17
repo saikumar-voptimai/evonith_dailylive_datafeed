@@ -1,6 +1,6 @@
 ## Evonith Daily and Live Data Loader
 
-This Python-based CLI tool ingests blast-furnace process variables into InfluxDB, supporting daily, historic, and live modes. It is designed for robust, automated data loading, downsampling, and optional local export for auditing or downstream workflows.
+This Python-based CLI tool ingests blast-furnace process variables into InfluxDB, supporting **daily**, **range backfill**, and **live** modes. It is designed for robust, automated data loading and optional local export for auditing or downstream workflows.
 
 ---
 
@@ -17,14 +17,11 @@ This Python-based CLI tool ingests blast-furnace process variables into InfluxDB
   Runs as a cronjob every 10 seconds, fetching real-time data from the live API and writing to InfluxDB.
 
 - **Downsampling**:  
-  In Daily/Historic modes, computes 5-minute averages and writes to a dedicated `bucket_5min`.
-
+- **Range (backfill)**:  
+  Manually triggered for a date range (via `--startdate` and `--enddate`).
 ---
 
 ### Code Organization
-
-- **config/**:  
-  - `config.yaml`: API endpoints, credentials, bucket names, timing, etc.  
   - `field_mappings.yaml`: Field name mappings for flexible schema evolution.  
   - `logging.yaml`, `logging_debug.yaml`: Logging configuration.
 
@@ -32,11 +29,10 @@ This Python-based CLI tool ingests blast-furnace process variables into InfluxDB
   CLI entrypoint. Parses arguments and orchestrates the fetch → transform → write pipeline.
 
 - **src/pipeline/**:  
-  - `api_client.py`: HTTP wrappers for historic and live API calls.  
+  - `api_client.py`: HTTP wrappers for daily (range) and live API calls.  
   - `data_cleaner.py`: Cleans and parses raw JSON, handles timestamps and missing/null fields.  
   - `bf2_rename_map.py`: Applies field mappings and builds InfluxDB point objects.  
   - `influx_writer.py`: Writes points to InfluxDB, supporting override and conditional writes.  
-  - `write_to_file.py`: Serializes and writes points to text/CSV files by date and mode.  
   - `utils.py`: Helpers (e.g., `daterange` generator).
 
 - **logs/**: Runtime logs (per run/date).
@@ -47,9 +43,8 @@ This Python-based CLI tool ingests blast-furnace process variables into InfluxDB
 
 ### Business Logic
 
-- Loads blast-furnace process variables in three modes (Daily, Historic, Live).
-- In Daily/Historic modes, performs 5-minute downsampling and writes to a dedicated bucket.
-- Optionally dumps all raw points to text/CSV for auditing or downstream workflows.
+- Loads blast-furnace process variables in three modes (Daily, Range backfill, Live).
+- Optionally dumps raw points to a local gzipped file for auditing or downstream workflows.
 
 ---
 
@@ -58,18 +53,19 @@ This Python-based CLI tool ingests blast-furnace process variables into InfluxDB
 #### 1. Data Flow in `main.py`
 
 1. **Parse CLI flags**:  
-   - Mode, dates, DB write/override, file-dump, delays, host/org overrides.
+  - Mode, dates, DB write/override, file retention, delays, host/org overrides, optional variable filtering.
 2. **Load environment**:  
    - `.env` and logging config.
 3. **Live mode**:  
-   - Loop: `fetch_api_data_live()` → process → optional DB/file write → sleep.
-4. **Daily/Historic mode**:  
-   - For each date: `fetch_api_data(date)` → process → optional delay.
+  - One run: `fetch_api_data_live()` → process → optional DB/file write → sleep to maintain cadence.
+4. **Daily/Range mode**:  
+  - Daily: processes a single date (defaults to yesterday when `--date` omitted).
+  - Range: processes a date list derived from `--startdate` and `--enddate`.
 5. **process_and_write()**:  
-   a. `clean_and_parse_data(raw)` → list of records  
-   b. `build_points(record, timestamp)` → list of InfluxDB points  
-   c. Conditionally call `write_to_influxdb()` (override or `should_write_point()`)  
-   d. If enabled, call `write_points_to_txt()` to dump all points.
+  a. `clean_and_parse_data(raw)` → list of records  
+  b. `build_points(record, timestamp)` → InfluxDB line protocol  
+  c. If `--db-write` is enabled, writes to InfluxDB (currently only when `--override` is enabled)  
+  d. Always stages line protocol in a temp file; if `--retain-file` is enabled, it is gzipped and kept.
 
 #### 2. Configuration and Extensibility
 
@@ -93,34 +89,37 @@ This Python-based CLI tool ingests blast-furnace process variables into InfluxDB
 The main entrypoint is `main.py`, which supports the following arguments:
 
 - `--mode` (required):
-  - `daily` — Fetches and loads data for the previous day (default for scheduled runs)
-  - `historic` — Loads data for a specific date or date range
-  - `live` — Continuously fetches and loads real-time data
+  - `daily` — Loads data for a single date (defaults to yesterday when `--date` omitted)
+  - `range` — Loads data for a date range using `--startdate` and `--enddate`
+  - `live` — Fetches and loads real-time data
 - `--date` (optional):
-  - Date in `YYYY-MM-DD` format. Used in historic mode for a single day.
-- `--start-date` and `--end-date` (optional):
-  - Date range in `YYYY-MM-DD` format. Used in historic mode for multiple days.
-- `--write-db` (flag, optional):
-  - If set, writes data to InfluxDB. If omitted, no DB write occurs.
+  - Date in `MM-DD-YYYY` format (used in daily mode).
+- `--startdate` and `--enddate` (optional):
+  - Date range in `MM-DD-YYYY` format (used in range mode).
+- `--db-write` (boolean flag, optional):
+  - Enable DB writes. Supports `--db-write`, `--db-write True/False`, and `--no-db-write`.
 - `--override` (flag, optional):
   - If set, overwrites existing points in InfluxDB.
-- `--write-file` (flag, optional):
-  - If set, writes all points to a local file (txt/CSV) for auditing.
+- `--retain-file` (boolean flag, optional):
+  - If set, retains a gzipped points file in `output/`.
+  - If not set, the temp staging file `output/tmp_<pid>.txt` is removed at the end of the run.
 - `--delay` (optional):
-  - Delay in seconds between processing each day (useful for rate limiting in historic mode).
+  - Delay in seconds between API calls (also used as a fallback cadence for live).
 - `--host` and `--org` (optional):
   - Override InfluxDB host and organization from config.
-- `--config` (optional):
-  - Path to a custom config YAML file.
-- `--log-level` (optional):
-  - Set logging level (e.g., DEBUG, INFO, WARNING).
+- `--debug` (boolean flag, optional):
+  - Enables debug logging config.
+- `--log-run` (boolean flag, optional):
+  - Records run metadata in a local SQLite DB (`db/run_metadata.db`) and creates per-run log files.
+- `--variable-file` (optional):
+  - Path to a `.txt` file containing variable names (one per line) to limit which fields are written (used during range backfill).
 
 Example usage:
 
 ```sh
-uv run python main.py --mode daily --write-db --write-file
-uv run python main.py --mode historic --start-date 2025-01-01 --end-date 2025-01-10 --write-db
-uv run python main.py --mode live --write-db
+uv run python src/main.py --mode daily --db-write --retain-file
+uv run python src/main.py --mode range --startdate 01-01-2025 --enddate 01-10-2025 --db-write --variable-file variables.txt
+uv run python src/main.py --mode live --db-write --no-retain-file
 ```
 
 ---
@@ -139,8 +138,22 @@ uv run python main.py --mode live --write-db
    ```
 3. Run the CLI:
    ```sh
-   uv run python main.py --mode daily --write-db
+  uv run python src/main.py --mode daily --db-write
    ```
 
 - All CLI arguments can be combined as needed.
 - Ensure your config files and environment variables are set up as described above.
+
+### Tests
+
+Run unit tests with:
+
+```sh
+python -m pytest -q
+```
+
+If `pytest` is not installed in your environment, install it with:
+
+```sh
+pip install pytest
+```
