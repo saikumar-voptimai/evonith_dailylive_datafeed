@@ -229,13 +229,13 @@ def process_and_write(
         logger.debug("Building points for timestamp=%s", ts)
         line_input = build_points(record, ts)
         write_points_to_txt(
-            line_input_per_rec=line_input, 
+            line_input_per_rec=line_input,
             date_str_file=date_str_file,
             time_str=time_str_file,
-            range=str(range), 
+            range=str(range),
             mode=mode,
-            out_dir=ouput_dir, 
-            filename=write_filename
+            out_dir=ouput_dir,
+            filename=write_filename,
         )
 
     if args and args.db_write:
@@ -273,7 +273,7 @@ def process_and_write(
                 logger.info("Removed temporary file %s", write_filename)
         except Exception as e:
             logger.warning("Failed to remove temporary file %s: %s", write_filename, e)
-    
+
     time_str = None
     if mode == "live":
         time_str = dt_utc.strftime(DB_CONFIG["TIME_FORMAT_FILENAME"])
