@@ -44,6 +44,7 @@ with open("config/config.yaml", "r", encoding="utf-8") as conffile:
 _TRUE = {"true", "1", "yes", "y", "t", "on"}
 _FALSE = {"false", "0", "no", "n", "f", "off"}
 
+
 def str2bool(v: str) -> bool:
     """
     Convert a string to a boolean.
@@ -63,7 +64,8 @@ def str2bool(v: str) -> bool:
         return False
     else:
         raise argparse.ArgumentTypeError("Boolean value expected.")
-    
+
+
 def add_bool_flag(parser: argparse.ArgumentParser, name: str, default: bool, help: str):
     """
     Add a boolean flag to the argument parser with both --name and --no-name options.
@@ -90,6 +92,7 @@ def add_bool_flag(parser: argparse.ArgumentParser, name: str, default: bool, hel
         help=f"Disable {help.lower()}",
     )
 
+
 def main():
     """
     Main function to parse command-line arguments and run the pipeline.
@@ -113,12 +116,39 @@ def main():
         help="Range 1 or 2 for daily mode - 1 is 0 to 12 hours, 2 is 12 to 24 hours data",
     )
 
-    add_bool_flag(parser, "db-write", default=False, help="Write to InfluxDB (True/False, default: False)")
-    add_bool_flag(parser, "override", default=True, help="Override existing data (True/False, default: True)")
-    add_bool_flag(parser, "retain-file", default=False, help="Write to txt or csv File (True/False, default: False)")
-    add_bool_flag(parser, "debug", default=False, help="Debug Mode (True/False, default: False)")
-    add_bool_flag(parser, "use-db-params", default=False, help="If True, uses CLI/config DB params; else uses token")
-    add_bool_flag(parser, "log-run", default=False, help="To log the run-details on sqlitedb (True/False, default: False)")
+    add_bool_flag(
+        parser,
+        "db-write",
+        default=False,
+        help="Write to InfluxDB (True/False, default: False)",
+    )
+    add_bool_flag(
+        parser,
+        "override",
+        default=True,
+        help="Override existing data (True/False, default: True)",
+    )
+    add_bool_flag(
+        parser,
+        "retain-file",
+        default=False,
+        help="Write to txt or csv File (True/False, default: False)",
+    )
+    add_bool_flag(
+        parser, "debug", default=False, help="Debug Mode (True/False, default: False)"
+    )
+    add_bool_flag(
+        parser,
+        "use-db-params",
+        default=False,
+        help="If True, uses CLI/config DB params; else uses token",
+    )
+    add_bool_flag(
+        parser,
+        "log-run",
+        default=False,
+        help="To log the run-details on sqlitedb (True/False, default: False)",
+    )
     parser.add_argument(
         "--variable-file",
         dest="variable_file",
@@ -171,7 +201,7 @@ def main():
 
         logger.info("Running in live mode")
         st = datetime.datetime.now()
-        
+
         logger.debug(
             "Live mode - Run for timestamp UTC at %s",
             datetime.datetime.now(datetime.timezone.utc),
@@ -189,7 +219,7 @@ def main():
             date_str_file=date_str_file,
             time_str_file=time_str_file,
             mode="live",
-            args=args
+            args=args,
         )
         et = datetime.datetime.now()
         run_time = datetime.datetime.now(datetime.timezone.utc).isoformat()
@@ -225,7 +255,7 @@ def main():
     elif args.startdate and args.enddate:
         start_date = datetime.datetime.strptime(args.startdate, "%m-%d-%Y")
         end_date = datetime.datetime.strptime(args.enddate, "%m-%d-%Y")
-        
+
         logger.debug(
             "Range mode - Processing date range: %s to %s", start_date, end_date
         )
@@ -268,7 +298,7 @@ def main():
                     log_path=log_path,
                     variables_list=variables_list,
                 )
-    elif args.mode == "daily": # Single date mode
+    elif args.mode == "daily":  # Single date mode
         if not args.date:
             args.date = (now_utc - datetime.timedelta(days=1)).strftime("%m-%d-%Y")
         logger.debug("Daily mode - Processing date: %s", args.date)
