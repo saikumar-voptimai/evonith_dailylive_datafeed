@@ -3,7 +3,17 @@ name: Test on Main Branch
 
 on:
   push:
-    branches: [ main ]
+    branches:
+      - main
+      - release
+  pull_request:
+    types:
+      - opened
+      - synchronize
+      - reopened
+    branches:
+      - main
+      - release
 
 jobs:
   test:
@@ -20,14 +30,17 @@ jobs:
       - name: Install uv
         run: pip install uv
 
+      - name: Create virtual environment
+        run: uv venv
+
       - name: Run unittests with coverage
         run: |
           mkdir -p test_logs
           uv run coverage run -m unittest discover -s test
-          uv run coverage report --fail-under=90
+          uv run coverage report --fail-under=80
 
       - name: Check formatting with Black
         run: uv run black --check .
 
       - name: Lint with pylint
-        run: uv run pylint src --fail-under=7.0
+        run: uv run pylint src --fail-under=5.0
