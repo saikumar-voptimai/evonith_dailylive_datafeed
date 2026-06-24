@@ -4,9 +4,16 @@ name: CI/CD Deploy to Raspberry Pi
 on:
   push:
     branches: [ release ]
+  pull_request:
+    types: 
+      - closed
+    branches: [ release ]
 
 jobs:
   test-build-deploy:
+    if: >-
+      github.event_name == 'push' ||
+      (github.event_name == 'pull_request' && github.event.action == 'closed' && github.event.pull_request.merged == true)
     environment: Kalpvoptpi1p Env
     runs-on: ubuntu-latest
     env:

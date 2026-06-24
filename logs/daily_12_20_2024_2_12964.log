@@ -1,4 +1,0 @@
-[INFO   | api_client           | L47] 2025-06-11T06:05:50+0530: fetch_api_data(date=12-20-2024, range_param=2) | api_client.py
-[INFO   | api_client           | L61] 2025-06-11T06:06:26+0530: API response status code: 200 | api_client.py
-[INFO   | api_client           | L134] 2025-06-11T06:06:27+0530: Fetched raw data for 12-20-2024 in 37.086205 seconds | api_client.py
-[INFO   | data_cleaner           | L23] 2025-06-11T06:06:27+0530: Starting clean_and_parse_data | data_cleaner.py

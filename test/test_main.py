@@ -10,6 +10,7 @@ import src.main
 
 
 class TestMain(unittest.TestCase):
+    @patch("src.main.time.sleep")
     @patch("src.main.init_db")
     @patch("src.main.setup_logging")
     @patch("src.main.fetch_api_data_live")
@@ -30,6 +31,7 @@ class TestMain(unittest.TestCase):
         mock_fetch_live,
         mock_setup_logging,
         mock_init_db,
+        mock_sleep,
     ):
         """Test main() in live mode: should fetch, clean, process data and log run using mocks."""
         args = argparse.Namespace(
@@ -47,6 +49,7 @@ class TestMain(unittest.TestCase):
             db_host=None,
             db_org=None,
             log_run=False,
+            variable_file=None,
         )
         mock_args.return_value = args
         mock_fetch_live.return_value = "RAW"
@@ -64,6 +67,7 @@ class TestMain(unittest.TestCase):
         mock_fetch_live.assert_called()
         mock_clean_data.assert_called()
         mock_process_and_write.assert_called()
+        mock_sleep.assert_called()
 
     @patch("src.main.init_db")
     @patch("src.main.setup_logging")
@@ -96,6 +100,7 @@ class TestMain(unittest.TestCase):
             db_host=None,
             db_org=None,
             log_run=False,
+            variable_file=None,
         )
         mock_args.return_value = args
         with patch(
@@ -140,6 +145,7 @@ class TestMain(unittest.TestCase):
             db_host=None,
             db_org=None,
             log_run=False,
+            variable_file=None,
         )
         mock_args.return_value = args
         with patch(
@@ -187,6 +193,7 @@ class TestMain(unittest.TestCase):
             db_host=None,
             db_org=None,
             log_run=False,
+            variable_file=None,
         )
         mock_args.return_value = args
         # Patch CONFIG to have correct date format
